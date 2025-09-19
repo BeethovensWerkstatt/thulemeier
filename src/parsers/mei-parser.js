@@ -310,5 +310,20 @@ export class MEIParser {
     })
 
     return { barLines, dirs }
+    const tempos = [...system.querySelectorAll('tempo')].map(tempo => {
+      const staff = tempo.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: tempo.getAttribute('xml:id'),
+        x: Math.round(parseFloat(tempo.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(tempo.getAttribute('y')) * 100) / 100,
+        width: Math.round(parseFloat(tempo.getAttribute('width')) * 100) / 100,
+        content: tempo.textContent.trim() || '', // we need to be able to get mixed content
+        facs: tempo.getAttribute('facs'),
+        rastrum,
+        element: tempo
+      }
+    })
+
   }
 }

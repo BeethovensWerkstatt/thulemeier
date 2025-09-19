@@ -6,6 +6,7 @@ import { renderClef } from './clef.js'
 import { renderDot } from './dot.js'
 import { renderBarLine } from './barLine.js'
 import { renderDir } from './dir.js'
+import { renderTempo } from './tempo.js'
 
 /**
  * Render single draft into the given SVG document
@@ -80,6 +81,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.dirs.forEach(dir => {
       const rastrum = context.rastrums.find(r => r.id === dir.rastrum)
       renderDir(dir, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.tempos.forEach(tempo => {
+      const rastrum = context.rastrums.find(r => r.id === tempo.rastrum)
+      renderTempo(tempo, systemG, rastrum, context, svg)
     })
 
     g.appendChild(systemG)
