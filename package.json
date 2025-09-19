@@ -1,0 +1,36 @@
+{
+  "name": "thulemeier",
+  "version": "1.0.0",
+  "description": "A facsimile renderer for MEI data operating on level 5 visual data",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BeethovensWerkstatt/thulemeier.git"
+  },
+  "keywords": [
+    "MEI",
+    "facsimile",
+    "Beethovens",
+    "Werkstatt"
+  ],
+  "author": "Johannes Kepper",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/BeethovensWerkstatt/thulemeier/issues"
+  },
+  "homepage": "https://github.com/BeethovensWerkstatt/thulemeier#readme",
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "standard": "^17.1.2"
+  },
+  "optionalDependencies": {
+    "jsdom": "^23.2.0"
+  }
+}

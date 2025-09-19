@@ -1,0 +1,276 @@
+// Conditional DOM API setup
+let DOMParser
+
+async function initializeDOMAPIs () {
+  if (typeof window !== 'undefined') {
+    // Browser environment
+    DOMParser = window.DOMParser
+  } else {
+    // Node.js environment - dynamically import jsdom
+    try {
+      const { JSDOM } = await import('jsdom')
+      const dom = new JSDOM()
+      DOMParser = dom.window.DOMParser
+    } catch (error) {
+      throw new Error('jsdom is required for Node.js support. Install it with: npm install jsdom')
+    }
+  }
+}
+
+// Initialize DOM APIs once
+const domAPIsReady = initializeDOMAPIs()
+
+export class MEIParser {
+  /**
+   * Parse MEI input to DOM Document
+   * @param {Document|string} input - MEI document as DOM or XML string
+   * @returns {Promise<Document>} Parsed DOM document
+   */
+  async parse (input) {
+    // Ensure DOM APIs are ready
+    await domAPIsReady
+
+    if (typeof input === 'string') {
+      return this.parseXMLString(input)
+    } else if (
+      input &&
+      typeof input.querySelector === 'function' &&
+      input.nodeType === 9 // DOCUMENT_NODE
+    ) {
+      return input
+    } else {
+      throw new Error('Input must be an XML string or DOM Document')
+    }
+  }
+
+  /**
+   * Parse XML string to DOM Document
+   * @param {string} xmlString - XML string to parse
+   * @returns {Document} Parsed DOM document
+   */
+  parseXMLString (xmlString) {
+    try {
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(xmlString, 'application/xml')
+
+      // Check for parsing errors
+      const parseError = doc.querySelector('parsererror')
+      if (parseError) {
+        throw new Error(`XML parsing error: ${parseError.textContent}`)
+      }
+
+      return doc
+    } catch (error) {
+      throw new Error(`Failed to parse XML: ${error.message}`)
+    }
+  }
+
+  /**
+   * Extract pages from MEI document
+   * @param {Document} meiDocument - MEI document
+   * @returns {Array} Array of page objects
+   */
+  extractPages (meiDocument) {
+    const surfaces = meiDocument.querySelectorAll('surface')
+    return Array.from(surfaces).map((surface, index) => ({
+      id: surface.getAttribute('xml:id'),
+      index,
+      element: surface,
+      zones: Array.from(surface.querySelectorAll('zone'))
+    }))
+  }
+
+  /**
+   * Extract surfaces from MEI document
+   * @param {Document} meiDocument - MEI document
+   * @returns {Array} Array of surface objects
+   */
+  extractSurfaces (meiDocument) {
+    const surfaces = meiDocument.querySelectorAll('surface')
+    return Array.from(surfaces).map(surface => ({
+      id: surface.getAttribute('xml:id'),
+      element: surface,
+      width: parseFloat(surface.getAttribute('width')) || 0,
+      height: parseFloat(surface.getAttribute('height')) || 0
+    }))
+  }
+
+  /**
+   * Extract zones from MEI document
+   * @param {Document} meiDocument - MEI document
+   * @returns {Array} Array of zone objects
+   */
+  extractZones (meiDocument) {
+    const zones = meiDocument.querySelectorAll('zone')
+    return Array.from(zones).map(zone => ({
+      id: zone.getAttribute('xml:id'),
+      element: zone,
+      ulx: parseFloat(zone.getAttribute('ulx')) || 0,
+      uly: parseFloat(zone.getAttribute('uly')) || 0,
+      lrx: parseFloat(zone.getAttribute('lrx')) || 0,
+      lry: parseFloat(zone.getAttribute('lry')) || 0
+    }))
+  }
+
+  /**
+   * Extract rastrums from MEI document
+   * @param {Document} meiDocument - MEI document
+   * @returns {Array} Array of rastrum objects
+   */
+  extractRastrums (meiDocument) {
+    const rastrums = meiDocument.querySelectorAll('rastrum')
+    return Array.from(rastrums).map(rastrum => {
+      const mmX = parseFloat(rastrum.getAttribute('system.leftmar')) || 0
+      const mmY = parseFloat(rastrum.getAttribute('system.topmar')) || 0
+      const mmW = parseFloat(rastrum.getAttribute('width')) || 0
+      const mmH = parseFloat(rastrum.getAttribute('system.height')) || 0
+      const rotate = parseFloat(rastrum.getAttribute('rotate')) || 0
+
+      const baseScaling = 90 // TODO: get from context options
+      const svgX = Math.round(mmX * baseScaling * 100) / 100
+      const svgY = Math.round(mmY * baseScaling * 100) / 100
+      const svgW = Math.round(mmW * baseScaling * 100) / 100
+      const svgH = Math.round(mmH * baseScaling * 100) / 100
+
+      const vuStepSize = (svgH - 10) / 8
+      const loc0Y = svgY + svgH - 5
+
+      return {
+        id: rastrum.getAttribute('xml:id'),
+        element: rastrum,
+        x: mmX,
+        y: mmY,
+        w: mmW,
+        h: mmH,
+        svgX,
+        svgY,
+        svgW,
+        svgH,
+        vuStepSize,
+        loc0Y,
+        rotate
+      }
+    })
+  }
+
+  /**
+   * Extract writing zones from MEI document
+   * @param {Document} meiDocument - MEI document
+   * @returns {Array} Array of writing zone objects
+   */
+  extractDrafts (meiDocument) {
+    const wzs = meiDocument.querySelectorAll('genDesc[class="#geneticOrder_writingZoneLevel"]')
+    const drafts = [...meiDocument.querySelectorAll('draft')]
+    const sources = [...meiDocument.querySelectorAll('source')]
+    return Array.from(wzs).map(wz => {
+      const id = wz.getAttribute('xml:id')
+      const label = wz.getAttribute('label') || ''
+      const sourceId = sources.find(s => s.getAttribute('target') === '#' + id).getAttribute('xml:id') || null
+      const draft = drafts.find(d => d.getAttribute('decls') === '#' + sourceId)
+      return {
+        label,
+        genDescId: id,
+        draftId: draft.getAttribute('xml:id'),
+        genDesc: wz,
+        draft: {
+          systems: this.extractSystems(draft),
+          element: draft
+        }
+      }
+    })
+  }
+
+  /**
+   * Extract systems from a draft element
+   * @param {Element} draft - Draft element
+   * @returns {Array} Array of system objects
+   */
+  extractSystems (draft) {
+    const systems = draft.querySelectorAll('system')
+    return Array.from(systems).map(system => {
+      const id = system.getAttribute('xml:id')
+      const staves = this.extractEvents(system)
+
+      return {
+        id,
+        staves,
+        system
+      }
+    })
+  }
+
+  /**
+   * Extract events from a system element
+   * @param {Element} system - System element
+   * @returns {Array} Array of staff objects, containing an array of event objects
+   */
+  extractEvents (system) {
+    const staves = []
+    system.querySelectorAll('staffDef').forEach(staffDef => {
+      const n = staffDef.getAttribute('n')
+      const rastrum = staffDef.getAttribute('decls').slice(1)
+      const notes = [...system.querySelectorAll('staff[n="' + n + '"] layer > note')].map(note => ({
+        id: note.getAttribute('xml:id'),
+        x: Math.round(parseFloat(note.getAttribute('x')) * 100) / 100,
+        loc: parseInt(note.getAttribute('loc')),
+        stemLen: note.hasAttribute('stem.dir') ? parseInt(note.getAttribute('stem.len')) || 7 : null,
+        stemDir: note.getAttribute('stem.dir') || null,
+        headShape: note.getAttribute('head.shape') || 'quarter',
+        flags: parseInt(note.getAttribute('dur')) > 4 ? (Math.log2(parseInt(note.getAttribute('dur')) / 8) + 1) : null, // parseInt(note.getAttribute('bw:flags')) || null,
+        facs: note.getAttribute('facs'),
+        element: note
+      }))
+      const chords = [...system.querySelectorAll('staff[n="' + n + '"] layer > chord')].map(chord => ({
+        id: chord.getAttribute('xml:id'),
+        x: chord.getAttribute('x'),
+        stemDir: chord.getAttribute('stem.dir') || null,
+        stemLen: chord.hasAttribute('stem.dir') ? parseInt(chord.getAttribute('stem.len')) || 7 : null,
+        flags: parseInt(chord.getAttribute('dur')) > 4 ? (Math.log2(parseInt(chord.getAttribute('dur')) / 8) + 1) : null, // parseInt(chord.getAttribute('bw:flags')) || null,
+        notes: [...chord.querySelectorAll('note')].map(note => ({
+          id: note.getAttribute('xml:id'),
+          loc: parseInt(note.getAttribute('loc')),
+          headShape: note.getAttribute('head.shape') || 'quarter'
+        })),
+        facs: chord.getAttribute('facs'),
+        element: chord
+      }))
+      const rests = [...system.querySelectorAll('staff[n="' + n + '"] layer > rest')].map(rest => ({
+        id: rest.getAttribute('xml:id'),
+        x: Math.round(parseFloat(rest.getAttribute('x')) * 100) / 100,
+        loc: parseInt(rest.getAttribute('loc')),
+        facs: rest.getAttribute('facs'),
+        type: rest.getAttribute('glyph.name'),
+        element: rest
+      }))
+      const accids = [...system.querySelectorAll('staff[n="' + n + '"] layer > accid')].map(accid => ({
+        id: accid.getAttribute('xml:id'),
+        x: Math.round(parseFloat(accid.getAttribute('x')) * 100) / 100,
+        loc: parseInt(accid.getAttribute('loc')),
+        facs: accid.getAttribute('facs'),
+        accid: accid.getAttribute('accid'),
+        element: accid
+      }))
+      const clefs = [...system.querySelectorAll('staff[n="' + n + '"] layer > clef')].map(clef => ({
+        id: clef.getAttribute('xml:id'),
+        x: clef.getAttribute('x'),
+        loc: clef.getAttribute('loc'),
+        element: clef
+      }))
+      const keysigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > keySig')].map(keysig => ({
+        id: keysig.getAttribute('xml:id'),
+        x: keysig.getAttribute('x'),
+        loc: keysig.getAttribute('loc'),
+        element: keysig
+      }))
+      const metersigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > meterSig')].map(metersig => ({
+        id: metersig.getAttribute('xml:id'),
+        x: metersig.getAttribute('x'),
+        loc: metersig.getAttribute('loc'),
+        element: metersig
+      }))
+
+      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, keysigs, metersigs })
+    })
+    return staves
+  }
+}

@@ -1,0 +1,63 @@
+import { renderNote } from './note.js'
+import { renderRest } from './rest.js'
+import { renderChord } from './chord.js'
+import { renderAccid } from './accid.js'
+
+/**
+ * Render single draft into the given SVG document
+ * @param {string} draftId - ID of the draft element to render
+ * @param {Document} meiDocument - MEI document
+ * @param {SVGElement} svg - SVG element to render into
+ * @param {Object} options - Rendering options
+ */
+export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg, context) {
+  const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
+  if (!doc) throw new Error('No SVG document context available')
+  console.log(`Rendering draft ${draftId} (${label}) with genDesc ${genDescId}`)
+
+  // Create a group for the draft
+  const g = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
+  g.setAttribute('class', 'draft')
+  g.setAttribute('data-label', label)
+  g.setAttribute('data-id', draftId)
+
+  draft.systems.forEach(system => {
+    const systemG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
+    systemG.setAttribute('class', 'system')
+    systemG.setAttribute('data-id', system.id)
+
+    system.staves.forEach(staff => {
+      const staffG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
+      staffG.setAttribute('class', 'staff')
+      staffG.setAttribute('data-n', staff.n)
+      staffG.setAttribute('data-rastrum', staff.rastrum || '')
+      const rastrum = context.rastrums.find(r => r.id === staff.rastrum)
+
+      // Render notes
+      staff.notes.forEach(note => {
+        renderNote(note, staffG, rastrum, context, svg)
+      })
+
+      // Render rests
+      staff.rests.forEach(rest => {
+        renderRest(rest, staffG, rastrum, context, svg)
+      })
+
+      // Render chords
+      staff.chords.forEach(chord => {
+        renderChord(chord, staffG, rastrum, context, svg)
+      })
+
+      // Render accidentals
+      staff.accids.forEach(accid => {
+        renderAccid(accid, staffG, rastrum, context, svg)
+      })
+
+      systemG.appendChild(staffG)
+    })
+
+    g.appendChild(systemG)
+  })
+
+  svg.appendChild(g)
+}
