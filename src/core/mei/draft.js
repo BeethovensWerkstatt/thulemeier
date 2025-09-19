@@ -2,6 +2,8 @@ import { renderNote } from './note.js'
 import { renderRest } from './rest.js'
 import { renderChord } from './chord.js'
 import { renderAccid } from './accid.js'
+import { renderClef } from './clef.js'
+import { renderBarLine } from './barLine.js'
 
 /**
  * Render single draft into the given SVG document
@@ -53,7 +55,20 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
         renderAccid(accid, staffG, rastrum, context, svg)
       })
 
+      // Render clefs
+      staff.clefs.forEach(clef => {
+        renderClef(clef, staffG, rastrum, context, svg)
+      })
+
       systemG.appendChild(staffG)
+    })
+
+    // handle controlEvents
+    // Render bar lines
+    system.controlEvents.barLines.forEach(barLine => {
+      const rastrum = context.rastrums.find(r => r.id === barLine.rastrum)
+      // barLineObj, staffG, rastrum, context, svg
+      renderBarLine(barLine, systemG, rastrum, context, svg)
     })
 
     g.appendChild(systemG)

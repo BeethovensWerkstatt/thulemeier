@@ -190,11 +190,13 @@ export class MEIParser {
     return Array.from(systems).map(system => {
       const id = system.getAttribute('xml:id')
       const staves = this.extractEvents(system)
+      const controlEvents = this.extractControlEvents(system)
 
       return {
         id,
         staves,
-        system
+        system,
+        controlEvents
       }
     })
   }
@@ -253,24 +255,38 @@ export class MEIParser {
       const clefs = [...system.querySelectorAll('staff[n="' + n + '"] layer > clef')].map(clef => ({
         id: clef.getAttribute('xml:id'),
         x: clef.getAttribute('x'),
-        loc: clef.getAttribute('loc'),
+        shape: clef.getAttribute('shape'),
+        line: clef.getAttribute('line'),
         element: clef
       }))
-      const keysigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > keySig')].map(keysig => ({
-        id: keysig.getAttribute('xml:id'),
-        x: keysig.getAttribute('x'),
-        loc: keysig.getAttribute('loc'),
-        element: keysig
-      }))
-      const metersigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > meterSig')].map(metersig => ({
-        id: metersig.getAttribute('xml:id'),
-        x: metersig.getAttribute('x'),
-        loc: metersig.getAttribute('loc'),
-        element: metersig
-      }))
 
-      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, keysigs, metersigs })
+      staves.push({ n, rastrum, notes, chords, rests, accids, clefs })
     })
     return staves
+  }
+
+  /**
+   * Extract control events from a system element
+   * @param {Element} system - System element
+   * @returns {Array} Array of control event objects
+   */
+  extractControlEvents (system) {
+    const rastrums = []
+    system.querySelectorAll('staffDef').forEach(staffDef => {
+      rastrums.push(staffDef.getAttribute('decls').slice(1))
+    })
+
+    const barLines = [...system.querySelectorAll('barLine')].map(barLine => ({
+      id: barLine.getAttribute('xml:id'),
+      x: Math.round(parseFloat(barLine.getAttribute('x')) * 100) / 100,
+      y: Math.round(parseFloat(barLine.getAttribute('y')) * 100) / 100,
+      x2: Math.round(parseFloat(barLine.getAttribute('x2')) * 100) / 100,
+      y2: Math.round(parseFloat(barLine.getAttribute('y2')) * 100) / 100,
+      facs: barLine.getAttribute('facs'),
+      rastrum: rastrums[0],
+      element: barLine
+    }))
+
+    return { barLines }
   }
 }
