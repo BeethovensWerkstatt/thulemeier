@@ -3,6 +3,7 @@ import { renderRest } from './rest.js'
 import { renderChord } from './chord.js'
 import { renderAccid } from './accid.js'
 import { renderClef } from './clef.js'
+import { renderDot } from './dot.js'
 import { renderBarLine } from './barLine.js'
 
 /**
@@ -58,6 +59,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       // Render clefs
       staff.clefs.forEach(clef => {
         renderClef(clef, staffG, rastrum, context, svg)
+      })
+
+      // Render dots
+      staff.dots.forEach(dot => {
+        renderDot(dot, staffG, rastrum, context, svg)
       })
 
       systemG.appendChild(staffG)

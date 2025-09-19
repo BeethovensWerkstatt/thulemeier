@@ -259,8 +259,15 @@ export class MEIParser {
         line: clef.getAttribute('line'),
         element: clef
       }))
+      const dots = [...system.querySelectorAll('staff[n="' + n + '"] layer > dot')].map(dot => ({
+        id: dot.getAttribute('xml:id'),
+        x: Math.round(parseFloat(dot.getAttribute('x')) * 100) / 100,
+        loc: parseInt(dot.getAttribute('loc')),
+        facs: dot.getAttribute('facs'),
+        element: dot
+      }))
 
-      staves.push({ n, rastrum, notes, chords, rests, accids, clefs })
+      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots })
     })
     return staves
   }
