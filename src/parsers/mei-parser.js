@@ -309,7 +309,6 @@ export class MEIParser {
       }
     })
 
-    return { barLines, dirs }
     const tempos = [...system.querySelectorAll('tempo')].map(tempo => {
       const staff = tempo.getAttribute('staff')
       const rastrum = rastrums[parseInt(staff) - 1]
@@ -325,5 +324,23 @@ export class MEIParser {
       }
     })
 
+    const dynams = [...system.querySelectorAll('dynam')].map(dynam => {
+      const staff = dynam.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: dynam.getAttribute('xml:id'),
+        x: Math.round(parseFloat(dynam.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(dynam.getAttribute('y')) * 100) / 100,
+        width: Math.round(parseFloat(dynam.getAttribute('width')) * 100) / 100,
+        content: dynam.textContent.trim() || '', // we need to be able to get mixed content
+        facs: dynam.getAttribute('facs'),
+        rastrum,
+        element: dynam
+      }
+    })
+
+    // fermata, pedal, dynam, hairpin
+
+    return { barLines, dirs, tempos, dynams }
   }
 }

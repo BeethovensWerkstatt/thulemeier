@@ -7,6 +7,7 @@ import { renderDot } from './dot.js'
 import { renderBarLine } from './barLine.js'
 import { renderDir } from './dir.js'
 import { renderTempo } from './tempo.js'
+import { renderDynam } from './dynam.js'
 
 /**
  * Render single draft into the given SVG document
@@ -86,6 +87,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.tempos.forEach(tempo => {
       const rastrum = context.rastrums.find(r => r.id === tempo.rastrum)
       renderTempo(tempo, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.dynams.forEach(dynam => {
+      const rastrum = context.rastrums.find(r => r.id === dynam.rastrum)
+      renderDynam(dynam, systemG, rastrum, context, svg)
     })
 
     g.appendChild(systemG)
