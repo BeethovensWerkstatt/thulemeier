@@ -5,6 +5,7 @@ import { renderAccid } from './accid.js'
 import { renderClef } from './clef.js'
 import { renderDot } from './dot.js'
 import { renderBarLine } from './barLine.js'
+import { renderDir } from './dir.js'
 
 /**
  * Render single draft into the given SVG document
@@ -73,8 +74,12 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     // Render bar lines
     system.controlEvents.barLines.forEach(barLine => {
       const rastrum = context.rastrums.find(r => r.id === barLine.rastrum)
-      // barLineObj, staffG, rastrum, context, svg
       renderBarLine(barLine, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.dirs.forEach(dir => {
+      const rastrum = context.rastrums.find(r => r.id === dir.rastrum)
+      renderDir(dir, systemG, rastrum, context, svg)
     })
 
     g.appendChild(systemG)
