@@ -339,8 +339,19 @@ export class MEIParser {
       }
     })
 
-    // fermata, pedal, dynam, hairpin
+    const curves = [...system.querySelectorAll('curve')].map(curve => {
+      const rastrum = rastrums[0]
+      return {
+        id: curve.getAttribute('xml:id'),
+        rastrum,
+        bezier: curve.getAttribute('bezier') || null,
+        facs: curve.getAttribute('facs'),
+        element: curve
+      }
+    })
 
-    return { barLines, dirs, tempos, dynams }
+    // fermata, pedal, hairpin
+
+    return { barLines, dirs, tempos, dynams, curves }
   }
 }
