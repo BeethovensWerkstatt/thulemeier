@@ -64,7 +64,6 @@ export function renderCurve (curveObj, staffG, rastrum, context, svg) {
     return `M${c1} C${c2} ${c3} ${c4} C${c3p} ${c2p} ${c1}`
   }
 
-
   // Thickness can be derived from scaling or set as a constant
   const thickness = 0.7 * (context.options.baseScaling || 40)
   const d = controlpointsToDoubleBezier(Q, thickness)
