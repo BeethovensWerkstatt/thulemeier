@@ -1,7 +1,11 @@
 import { FullPageRenderer } from './full-page.js'
+import { EmptyPageRenderer } from './empty-page.js'
+import { SingleDraftRenderer } from './single-draft.js'
 
 const renderers = {
-  fullPage: new FullPageRenderer()
+  fullPage: new FullPageRenderer(),
+  emptyPage: new EmptyPageRenderer(),
+  singleDraft: new SingleDraftRenderer()
 }
 
 /**
