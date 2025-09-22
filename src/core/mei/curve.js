@@ -42,7 +42,7 @@ export function renderCurve (curveObj, staffG, rastrum, context, svg) {
   }
 
   // Helper: main curve path (double-curve with offset for thickness)
-  function controlpointsToDoubleBezier(Q, thickness = 40) {
+  function controlpointsToDoubleBezier (Q, thickness = 40) {
     if (!Q?.length) return ''
     const c1 = new Vector(Q[0], Q[1])
     const c2 = new Vector(Q[2], Q[3])
