@@ -297,12 +297,34 @@ export class MEIParser {
     const dirs = [...system.querySelectorAll('dir')].map(dir => {
       const staff = dir.getAttribute('staff')
       const rastrum = rastrums[parseInt(staff) - 1]
+      // Extract mixed content as array of segments split at <lb>
+      function extractSegments (node) {
+        const segments = []
+        let seg = ''
+        function traverse (n) {
+          if (n.nodeType === 3) {
+            seg += n.nodeValue
+          } else if (n.nodeType === 1) {
+            if (/^(lb|mei:lb)$/i.test(n.nodeName)) {
+              segments.push(seg.trim())
+              seg = ''
+            } else if (n.childNodes && n.childNodes.length) {
+              for (let i = 0; i < n.childNodes.length; i++) {
+                traverse(n.childNodes[i])
+              }
+            }
+          }
+        }
+        traverse(node)
+        if (seg.trim()) segments.push(seg.trim())
+        return segments
+      }
       return {
         id: dir.getAttribute('xml:id'),
         x: Math.round(parseFloat(dir.getAttribute('x')) * 100) / 100,
         y: Math.round(parseFloat(dir.getAttribute('y')) * 100) / 100,
         width: Math.round(parseFloat(dir.getAttribute('width')) * 100) / 100,
-        content: dir.textContent.trim() || '', // we need to be able to get mixed content
+        content: extractSegments(dir), // array of segments split at <lb>
         facs: dir.getAttribute('facs'),
         rastrum,
         element: dir

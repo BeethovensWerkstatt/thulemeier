@@ -36,16 +36,70 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
   textEl.setAttribute('font-size', '0px')
   if (textLength) textEl.setAttribute('textLength', textLength)
 
-  const tspanOuter = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan')
-  tspanOuter.setAttribute('id', dirObj.id + '_tspan')
-  tspanOuter.setAttribute('class', 'text')
+  const lineHeight = defaultFontSize * 1.2
+  // Recursively traverse for <lb> elements
+  function renderSegmentsFromNode (node, tspanCount = 0) {
+    let seg = ''
+    let count = tspanCount
+    function traverse (n) {
+      if (n.nodeType === 3) {
+        seg += n.nodeValue
+      } else if (n.nodeType === 1) {
+        if (/^(lb|mei:lb)$/i.test(n.nodeName)) {
+          flushSeg()
+        } else if (n.childNodes && n.childNodes.length) {
+          for (let i = 0; i < n.childNodes.length; i++) {
+            traverse(n.childNodes[i])
+          }
+        }
+      }
+    }
+    function flushSeg () {
+      if (seg.trim()) {
+        const tspan = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan')
+        tspan.setAttribute('font-size', defaultFontSize + 'px')
+        tspan.textContent = seg.trim()
+        if (count > 0) {
+          tspan.setAttribute('x', x)
+          tspan.setAttribute('dy', lineHeight)
+        }
+        textEl.appendChild(tspan)
+        count++
+      }
+      seg = ''
+    }
+    traverse(node)
+    flushSeg()
+  }
 
-  const tspanInner = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan')
-  tspanInner.setAttribute('font-size', defaultFontSize + 'px')
-  tspanInner.textContent = textContent
-
-  tspanOuter.appendChild(tspanInner)
-  textEl.appendChild(tspanOuter)
+  if (Array.isArray(dirObj.content)) {
+    dirObj.content.forEach((seg, i) => {
+      const tspan = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan')
+      tspan.setAttribute('font-size', defaultFontSize + 'px')
+      tspan.textContent = seg
+      if (i > 0) {
+        tspan.setAttribute('x', x)
+        tspan.setAttribute('dy', lineHeight)
+      }
+      textEl.appendChild(tspan)
+    })
+  } else if (typeof dirObj.content === 'object' && dirObj.content && dirObj.content.childNodes) {
+    renderSegmentsFromNode(dirObj.content, 0)
+  } else {
+    // Fallback: split string content
+    const lbRegex = /<\s*(?:mei:)?lb\b[^>]*\/?\s*>/gi
+    const segments = textContent.split(lbRegex)
+    segments.forEach((seg, i) => {
+      const tspan = doc.createElementNS('http://www.w3.org/2000/svg', 'tspan')
+      tspan.setAttribute('font-size', defaultFontSize + 'px')
+      tspan.textContent = seg.trim()
+      if (i > 0) {
+        tspan.setAttribute('x', x)
+        tspan.setAttribute('dy', lineHeight)
+      }
+      textEl.appendChild(tspan)
+    })
+  }
   dirG.appendChild(textEl)
   staffG.appendChild(dirG)
 }
