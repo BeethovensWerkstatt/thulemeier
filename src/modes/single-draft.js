@@ -1,6 +1,5 @@
 import { createSVGContainer } from '../utils/svg-factory.js'
 import { version } from '../../index.js'
-import { renderRastrums } from '../core/mei/rastrums.js'
 import { renderDraft } from '../core/mei/draft.js'
 
 export class SingleDraftRenderer {
