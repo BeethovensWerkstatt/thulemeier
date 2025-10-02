@@ -165,7 +165,10 @@ export class MEIParser {
     return Array.from(wzs).map(wz => {
       const id = wz.getAttribute('xml:id')
       const label = wz.getAttribute('label') || ''
-      const sourceId = sources.find(s => s.getAttribute('target') === '#' + id).getAttribute('xml:id') || null
+      // console.log('Writing zone:', { id, label })
+      // console.log('Sources:', sources[0].outerHTML)
+      const sourceId = sources.find(s => s.getAttribute('target').endsWith('#' + id)).getAttribute('xml:id') || null
+      // console.log('Matched sourceId:', sourceId)
       const draft = drafts.find(d => d.getAttribute('decls') === '#' + sourceId)
       return {
         label,
@@ -210,7 +213,7 @@ export class MEIParser {
     const staves = []
     system.querySelectorAll('staffDef').forEach(staffDef => {
       const n = staffDef.getAttribute('n')
-      const rastrum = staffDef.getAttribute('decls').slice(1)
+      const rastrum = staffDef.getAttribute('decls').split('#')[1]
       const notes = [...system.querySelectorAll('staff[n="' + n + '"] layer > note')].map(note => ({
         id: note.getAttribute('xml:id'),
         x: Math.round(parseFloat(note.getAttribute('x')) * 100) / 100,
@@ -218,7 +221,7 @@ export class MEIParser {
         stemLen: note.hasAttribute('stem.dir') ? parseInt(note.getAttribute('stem.len')) || 7 : null,
         stemDir: note.getAttribute('stem.dir') || null,
         headShape: note.getAttribute('head.shape') || 'quarter',
-        flags: parseInt(note.getAttribute('dur')) > 4 ? (Math.log2(parseInt(note.getAttribute('dur')) / 8) + 1) : null, // parseInt(note.getAttribute('bw:flags')) || null,
+        flags: parseInt(note.getAttribute('bw:stem.flags')) || null,
         facs: note.getAttribute('facs'),
         element: note
       }))
@@ -280,7 +283,7 @@ export class MEIParser {
   extractControlEvents (system) {
     const rastrums = []
     system.querySelectorAll('staffDef').forEach(staffDef => {
-      rastrums.push(staffDef.getAttribute('decls').slice(1))
+      rastrums.push(staffDef.getAttribute('decls').split('#')[1])
     })
 
     const barLines = [...system.querySelectorAll('barLine')].map(barLine => ({
@@ -292,6 +295,17 @@ export class MEIParser {
       facs: barLine.getAttribute('facs'),
       rastrum: rastrums[0],
       element: barLine
+    }))
+
+    const beams = [...system.querySelectorAll('line[func="beam"]')].map(beam => ({
+      id: beam.getAttribute('xml:id'),
+      x: Math.round(parseFloat(beam.getAttribute('x')) * 100) / 100,
+      y: Math.round(parseFloat(beam.getAttribute('y')) * 100) / 100,
+      x2: Math.round(parseFloat(beam.getAttribute('x2')) * 100) / 100,
+      y2: Math.round(parseFloat(beam.getAttribute('y2')) * 100) / 100,
+      facs: beam.getAttribute('facs'),
+      rastrum: rastrums[0],
+      element: beam
     }))
 
     const dirs = [...system.querySelectorAll('dir')].map(dir => {
@@ -374,6 +388,6 @@ export class MEIParser {
 
     // fermata, pedal, hairpin
 
-    return { barLines, dirs, tempos, dynams, curves }
+    return { barLines, beams, dirs, tempos, dynams, curves }
   }
 }

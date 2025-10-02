@@ -5,6 +5,7 @@ import { renderAccid } from './accid.js'
 import { renderClef } from './clef.js'
 import { renderDot } from './dot.js'
 import { renderBarLine } from './barLine.js'
+import { renderBeam } from './beam.js'
 import { renderDir } from './dir.js'
 import { renderTempo } from './tempo.js'
 import { renderDynam } from './dynam.js'
@@ -78,6 +79,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.barLines.forEach(barLine => {
       const rastrum = context.rastrums.find(r => r.id === barLine.rastrum)
       renderBarLine(barLine, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.beams.forEach(beam => {
+      const rastrum = context.rastrums.find(r => r.id === beam.rastrum)
+      renderBeam(beam, systemG, rastrum, context, svg)
     })
 
     system.controlEvents.dirs.forEach(dir => {
