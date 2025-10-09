@@ -29,7 +29,7 @@ export function renderBarLine (barLineObj, staffG, rastrum, context, svg) {
   const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
   path.setAttribute('d', `M${x1} ${y1} L${x2} ${y2}`)
   path.setAttribute('stroke-width', barLineWidth)
-  path.setAttribute('stroke', 'black')
+  // path.setAttribute('stroke', 'black')
 
   barLineG.appendChild(path)
   staffG.appendChild(barLineG)

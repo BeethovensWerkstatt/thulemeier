@@ -80,7 +80,7 @@ export function renderCurve (curveObj, staffG, rastrum, context, svg) {
   path.setAttribute('stroke-width', curveStrokeWidth)
   path.setAttribute('stroke-linecap', 'round')
   path.setAttribute('stroke-linejoin', 'round')
-  path.setAttribute('stroke', 'black')
+  // path.setAttribute('stroke', 'black')
   curveG.appendChild(path)
   staffG.appendChild(curveG)
 }

@@ -120,7 +120,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
       const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
       path.setAttribute('d', `M${x1} ${lineY} L${x2} ${lineY}`)
       path.setAttribute('stroke-width', ledgerLineWidth)
-      path.setAttribute('stroke', 'black')
+      // path.setAttribute('stroke', 'black')
       ledgerG.appendChild(path)
     }
   }
@@ -140,7 +140,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
       const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
       path.setAttribute('d', `M${x1} ${lineY} L${x2} ${lineY}`)
       path.setAttribute('stroke-width', ledgerLineWidth)
-      path.setAttribute('stroke', 'black')
+      // path.setAttribute('stroke', 'black')
       ledgerG.appendChild(path)
     }
   }
@@ -166,7 +166,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
     const stemPath = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
     stemPath.setAttribute('d', `M${stemX} ${stemY1} L${stemX} ${stemY2}`)
     stemPath.setAttribute('stroke-width', stemWidth)
-    stemPath.setAttribute('stroke', 'black')
+    // stemPath.setAttribute('stroke', 'black')
     stemG.appendChild(stemPath)
 
     // flags, if necessary
