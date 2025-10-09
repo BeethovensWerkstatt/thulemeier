@@ -304,7 +304,7 @@ export class MEIParser {
       x2: Math.round(parseFloat(beam.getAttribute('x2')) * 100) / 100,
       y2: Math.round(parseFloat(beam.getAttribute('y2')) * 100) / 100,
       facs: beam.getAttribute('facs'),
-      rastrum: rastrums[0],
+      rastrum: rastrums[parseInt(beam.getAttribute('staff')) - 1],
       element: beam
     }))
 
