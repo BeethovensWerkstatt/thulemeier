@@ -40,6 +40,7 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       staffG.setAttribute('data-n', staff.n)
       staffG.setAttribute('data-rastrum', staff.rastrum || '')
       const rastrum = context.rastrums.find(r => r.id === staff.rastrum)
+      staffG.setAttribute('style', 'transform: rotate(' + rastrum.rotate + 'deg);')
 
       // Render notes
       staff.notes.forEach(note => {
