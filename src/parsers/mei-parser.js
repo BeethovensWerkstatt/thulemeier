@@ -170,6 +170,7 @@ export class MEIParser {
       const sourceId = sources.find(s => s.getAttribute('target').endsWith('#' + id)).getAttribute('xml:id') || null
       // console.log('Matched sourceId:', sourceId)
       const draft = drafts.find(d => d.getAttribute('decls') === '#' + sourceId)
+      const deletions = this.extractDeletions(draft)
       return {
         label,
         genDescId: id,
@@ -177,6 +178,7 @@ export class MEIParser {
         genDesc: wz,
         draft: {
           systems: this.extractSystems(draft),
+          deletions,
           element: draft
         }
       }
@@ -407,5 +409,23 @@ export class MEIParser {
     // fermata, pedal, hairpin
 
     return { barLines, beams, dirs, tempos, dynams, curves }
+  }
+
+  /**
+   * Extract deletions from a draft element
+   * @param {Element} draft - Draft element
+   * @returns {Array} Array of deletion objects
+   */
+  extractDeletions (draft) {
+    const deletions = []
+    const dels = draft.querySelectorAll('del')
+    dels.forEach(del => {
+      deletions.push({
+        id: del.getAttribute('xml:id'),
+        path: del.querySelector('path').getAttribute('d'),
+        element: del
+      })
+    })
+    return deletions
   }
 }

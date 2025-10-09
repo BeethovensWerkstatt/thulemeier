@@ -10,6 +10,7 @@ import { renderDir } from './dir.js'
 import { renderTempo } from './tempo.js'
 import { renderDynam } from './dynam.js'
 import { renderCurve } from './curve.js'
+import { renderDel } from './del.js'
 
 /**
  * Render single draft into the given SVG document
@@ -113,6 +114,15 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
 
     g.appendChild(systemG)
   })
+
+  const deletionsG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
+  deletionsG.setAttribute('class', 'deletions')
+
+  draft.deletions.forEach(del => {
+    renderDel(del, deletionsG, context, svg)
+  })
+
+  g.appendChild(deletionsG)
 
   svg.appendChild(g)
 }
