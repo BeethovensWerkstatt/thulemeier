@@ -315,23 +315,39 @@ export class MEIParser {
       function extractSegments (node) {
         const segments = []
         let seg = ''
+
         function traverse (n) {
           if (n.nodeType === 3) {
-            seg += n.nodeValue
+            // Text node - add to current segment
+            seg += n.nodeValue.replace(/\n/g, ' ').replace(/\s+/g, ' ')
           } else if (n.nodeType === 1) {
-            if (/^(lb|mei:lb)$/i.test(n.nodeName)) {
-              segments.push(seg.trim())
+            // Element node
+            if (n.localName === 'lb') {
+              // Line break - push current segment and reset
+              if (seg.trim()) {
+                segments.push(seg.trim())
+              }
               seg = ''
-            } else if (n.childNodes && n.childNodes.length) {
-              for (let i = 0; i < n.childNodes.length; i++) {
-                traverse(n.childNodes[i])
+            } else {
+              // Other element - traverse its children
+              if (n.childNodes && n.childNodes.length) {
+                for (let i = 0; i < n.childNodes.length; i++) {
+                  traverse(n.childNodes[i])
+                }
               }
             }
           }
         }
+
         traverse(node)
-        if (seg.trim()) segments.push(seg.trim())
-        return segments
+
+        // Push the final segment if it has content
+        if (seg.trim()) {
+          segments.push(seg.trim())
+        }
+
+        // Filter out empty segments
+        return segments.filter(s => s.length > 0)
       }
       return {
         id: dir.getAttribute('xml:id'),
@@ -340,6 +356,8 @@ export class MEIParser {
         width: Math.round(parseFloat(dir.getAttribute('width')) * 100) / 100,
         content: extractSegments(dir), // array of segments split at <lb>
         facs: dir.getAttribute('facs'),
+        lineheight: parseFloat(dir.getAttribute('lineheight')) || null,
+        rotation: parseFloat(dir.getAttribute('rotation')) || null,
         rastrum,
         element: dir
       }

@@ -36,7 +36,11 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
   textEl.setAttribute('font-size', '0px')
   if (textLength) textEl.setAttribute('textLength', textLength)
 
-  const lineHeight = defaultFontSize * 1.2
+  // console.log(881, rastrum, context)
+
+  // mm = rastrum.vuStepSize * 8 / rastrum.h = px/mm
+  const pxPerMm = (rastrum.vuStepSize * 8) / rastrum.h
+  const lineheight = dirObj.lineheight ? pxPerMm * dirObj.lineheight : pxPerMm * 6
   // Recursively traverse for <lb> elements
   function renderSegmentsFromNode (node, tspanCount = 0) {
     let seg = ''
@@ -79,7 +83,7 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
       tspan.textContent = seg
       if (i > 0) {
         tspan.setAttribute('x', x)
-        tspan.setAttribute('dy', lineHeight)
+        tspan.setAttribute('dy', lineheight)
       }
       textEl.appendChild(tspan)
     })
@@ -95,10 +99,13 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
       tspan.textContent = seg.trim()
       if (i > 0) {
         tspan.setAttribute('x', x)
-        tspan.setAttribute('dy', lineHeight)
+        tspan.setAttribute('dy', lineheight)
       }
       textEl.appendChild(tspan)
     })
+  }
+  if (dirObj.rotation) {
+    dirG.setAttribute('style', 'font-style: italic; transform: rotate(' + dirObj.rotation + 'deg); transform-origin: ' + x + 'px ' + y + 'px;')
   }
   dirG.appendChild(textEl)
   staffG.appendChild(dirG)
