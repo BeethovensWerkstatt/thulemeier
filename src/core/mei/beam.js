@@ -25,6 +25,7 @@ export function renderBeam (beamObj, staffG, rastrum, context, svg) {
   const beamG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
   beamG.setAttribute('class', 'beam')
   beamG.setAttribute('data-id', beamObj.id)
+  beamG.setAttribute('style', 'transform: rotate(' + rastrum.rotate + 'deg); transform-origin: ' + rastrumX + 'px ' + rastrumY + 'px;')
 
   /*
   <polygon
