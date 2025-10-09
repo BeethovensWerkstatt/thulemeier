@@ -7,7 +7,7 @@
 export function calculateDimensions (meiDocument, options) {
   // TODO: Extract dimensions from MEI document or use defaults
 
-  let width, height
+  let width, height, rotation
   const surface = meiDocument.querySelector('surface')
   if (surface) {
     const allFolia = [...meiDocument.querySelectorAll('foliaDesc *')]
@@ -28,13 +28,18 @@ export function calculateDimensions (meiDocument, options) {
       width = 300
       height = 240
     }
+    const graphicTarget = surface.querySelector('graphic[type="facsimile"]').getAttribute('target')
+    rotation = graphicTarget && graphicTarget.includes('rotate=') ? graphicTarget.split('rotate=')[1] : null
   }
+
+  console.log('Calculated dimensions:', { width, height, rotation })
 
   const scaling = options.baseScaling || 90
 
   return {
     width,
     height,
+    rotation,
     viewBox: `0 0 ${width * scaling} ${height * scaling}`
   }
 }
