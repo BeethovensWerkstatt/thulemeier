@@ -4,6 +4,7 @@ import { renderChord } from './chord.js'
 import { renderAccid } from './accid.js'
 import { renderClef } from './clef.js'
 import { renderDot } from './dot.js'
+import { renderMeterSig } from './meterSig.js'
 import { renderBarLine } from './barLine.js'
 import { renderBeam } from './beam.js'
 import { renderDir } from './dir.js'
@@ -76,6 +77,12 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       staff.dots.forEach(dot => {
         renderDot(dot, staffG, rastrum, context, svg)
       })
+
+      // Render meterSigs
+      staff.meterSigs.forEach(meterSig => {
+        renderMeterSig(meterSig, staffG, rastrum, context, svg)
+      })
+
 
       systemG.appendChild(staffG)
     })

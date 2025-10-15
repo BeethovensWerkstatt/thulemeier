@@ -271,8 +271,18 @@ export class MEIParser {
         facs: dot.getAttribute('facs'),
         element: dot
       }))
+      const meterSigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > meterSig')].map(meterSig => ({
+        id: meterSig.getAttribute('xml:id'),
+        x: Math.round(parseFloat(meterSig.getAttribute('x')) * 100) / 100,
+        loc: parseInt(meterSig.getAttribute('loc')),
+        facs: meterSig.getAttribute('facs'),
+        symbol: meterSig.hasAttribute('sym') ? meterSig.getAttribute('sym') : null,
+        count: meterSig.hasAttribute('sym') ? null : meterSig.getAttribute('count'),
+        unit: meterSig.hasAttribute('sym') ? null : meterSig.getAttribute('unit'),
+        element: meterSig
+      }))
 
-      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots })
+      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots, meterSigs })
     })
     return staves
   }
