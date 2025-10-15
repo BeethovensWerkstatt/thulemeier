@@ -52,7 +52,7 @@ export function renderRastrums (meiDocument, svg, context) {
     }
 
     // TODO: rotation
-    g.setAttribute('style', 'transform: rotate(' + rastrum.rotate + 'deg);')
+    g.setAttribute('style', 'transform: rotate(' + rastrum.rotate + 'deg); transform-origin: ' + x + 'px ' + y + 'px;')
 
     /*
     <rect x="1905" y="1465" height="598" width="22460" fill="transparent"></rect>
