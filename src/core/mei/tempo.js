@@ -8,7 +8,7 @@ const defaultFontSize = 405
  * @param {Object} context - the rendering context
  * @param {SVGElement} svg - the root SVG element
  */
-export function renderTempo (tempoObj, systemG, rastrum, context, svg) {
+export function renderTempo(tempoObj, systemG, rastrum, context, svg) {
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
@@ -18,7 +18,7 @@ export function renderTempo (tempoObj, systemG, rastrum, context, svg) {
   const x = rastrumX + (tempoObj.x * context.options.baseScaling || 0)
   const y = rastrumY + (tempoObj.y * context.options.baseScaling || 0)
   const textLength = tempoObj.width ? (tempoObj.width * context.options.baseScaling || 0) + 'px' : undefined
-  const textContent = tempoObj.text || ''
+  const textContent = tempoObj.content || ''
 
   // Create the tempo group
   const tempoG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
