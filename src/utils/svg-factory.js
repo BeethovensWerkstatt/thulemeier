@@ -44,6 +44,25 @@ export async function createSVGContainer (dimensions, options = {}) {
   svg.appendChild(desc)
 
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs')
+
+  // Add default CSS styles
+  const style = document.createElementNS('http://www.w3.org/2000/svg', 'style')
+  style.setAttribute('type', 'text/css')
+
+  // Default CSS rules
+  const defaultCSS = `
+    .staff * {
+      fill: #000;
+      stroke: #000;
+    }
+
+    .deletionBack {
+      fill: #00000033;
+    }
+  `
+  style.textContent = defaultCSS
+  defs.appendChild(style)
+
   svg.appendChild(defs)
 
   return svg
