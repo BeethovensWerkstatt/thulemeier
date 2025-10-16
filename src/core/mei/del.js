@@ -5,14 +5,14 @@
  * @param {Object} context - the rendering context
  * @param {SVGElement} svg - the root SVG element
  */
-export function renderDel(del, containerG, context, svg) {
+export function renderDel (del, containerG, context, svg) {
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
   const g = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
   g.setAttribute('data-id', del.id)
-  g.setAttribute('data-class', 'deletion')
-  g.setAttribute('class', 'deletion')
+  g.setAttribute('data-class', 'del')
+  g.setAttribute('class', 'del')
 
   containerG.append(g)
 
