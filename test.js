@@ -1,7 +1,7 @@
 import { render, supportedModes, version } from './index.js'
 import { loadMEI } from './src/utils/load-mei.js'
 
-const meiPath = './test/2025-09_thulemeier_test.xml'
+const meiPath = './test/2025-09_thulemeier_test3.xml'
 const outputPath = './test/output.svg' // Desired output file path
 const outputPagePath = './test/output-page.svg' // Desired output file path
 // const outputDraftPath = './test/output-draft.svg' // Desired output file path
