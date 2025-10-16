@@ -25,9 +25,9 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
   if (!doc) throw new Error('No SVG document context available')
   console.log(`Rendering draft ${draftId} (${label}) with genDesc ${genDescId}`)
 
-  if (context.dimensions.rotation) {
+  /* if (context.dimensions.rotation) {
     svg.setAttribute('style', `transform: rotate(${context.dimensions.rotation}deg);`)
-  }
+  } */
 
   // Create a group for the draft
   const g = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
