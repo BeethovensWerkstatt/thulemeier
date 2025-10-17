@@ -51,14 +51,14 @@ export async function createSVGContainer (dimensions, options = {}) {
 
   // Default CSS rules
   const defaultCSS = `
-    .staff * {
+    /* .staff * {
       fill: #000;
       stroke: #000;
     }
 
     .deletionBack {
       fill: #00000033;
-    }
+    } */
   `
   style.textContent = defaultCSS
   defs.appendChild(style)

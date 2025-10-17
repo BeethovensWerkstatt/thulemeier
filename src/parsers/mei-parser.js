@@ -171,6 +171,7 @@ export class MEIParser {
       // console.log('Matched sourceId:', sourceId)
       const draft = drafts.find(d => d.getAttribute('decls') === '#' + sourceId)
       const deletions = this.extractDeletions(draft)
+
       return {
         label,
         genDescId: id,
@@ -390,6 +391,39 @@ export class MEIParser {
       }
     })
 
+    const metaMarkClarifications = [...system.querySelectorAll('metaMark[function="clarification"]')].map(metaMark => {
+      const staff = metaMark.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: metaMark.getAttribute('xml:id'),
+        x: Math.round(parseFloat(metaMark.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(metaMark.getAttribute('y')) * 100) / 100,
+        // width: Math.round(parseFloat(metaMark.getAttribute('width')) * 100) / 100,
+        function: metaMark.getAttribute('function'),
+        content: metaMark.textContent.trim() || '', // we need to be able to get mixed content
+        facs: metaMark.getAttribute('facs'),
+        rastrum,
+        element: metaMark
+      }
+    })
+
+    const metaMarkNavigations = [...system.querySelectorAll('metaMark[function="navigation"]')].map(metaMark => {
+      // const staff = metaMark.getAttribute('staff')
+      // const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: metaMark.getAttribute('xml:id'),
+        x: Math.round(parseFloat(metaMark.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(metaMark.getAttribute('y')) * 100) / 100,
+        // width: Math.round(parseFloat(metaMark.getAttribute('width')) * 100) / 100,
+        function: metaMark.getAttribute('function'),
+        target: metaMark.hasAttribute('target') ? metaMark.getAttribute('target') : null,
+        content: metaMark.textContent.trim() || '', // we need to be able to get mixed content
+        facs: metaMark.getAttribute('facs'),
+        rastrum: rastrums[0],
+        element: metaMark
+      }
+    })
+
     const dynams = [...system.querySelectorAll('dynam')].map(dynam => {
       const staff = dynam.getAttribute('staff')
       const rastrum = rastrums[parseInt(staff) - 1]
@@ -418,7 +452,7 @@ export class MEIParser {
 
     // fermata, pedal, hairpin
 
-    return { barLines, beams, dirs, tempos, dynams, curves }
+    return { barLines, beams, dirs, tempos, dynams, curves, metaMarkClarifications, metaMarkNavigations }
   }
 
   /**

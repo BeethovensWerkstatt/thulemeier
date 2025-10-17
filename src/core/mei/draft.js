@@ -12,6 +12,7 @@ import { renderTempo } from './tempo.js'
 import { renderDynam } from './dynam.js'
 import { renderCurve } from './curve.js'
 import { renderDel } from './del.js'
+import { renderMetaMarkClarification, renderMetaMarkNavigation } from './metaMark.js'
 
 /**
  * Render single draft into the given SVG document
@@ -82,8 +83,6 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       staff.meterSigs.forEach(meterSig => {
         renderMeterSig(meterSig, staffG, rastrum, context, svg)
       })
-
-
       systemG.appendChild(staffG)
     })
 
@@ -117,6 +116,16 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.curves.forEach(curve => {
       const rastrum = context.rastrums.find(r => r.id === curve.rastrum)
       renderCurve(curve, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.metaMarkClarifications.forEach(clarification => {
+      const rastrum = context.rastrums.find(r => r.id === clarification.rastrum)
+      renderMetaMarkClarification(clarification, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.metaMarkNavigations.forEach(navigation => {
+      const rastrum = context.rastrums.find(r => r.id === navigation.rastrum)
+      renderMetaMarkNavigation(navigation, systemG, rastrum, context, svg)
     })
 
     g.appendChild(systemG)
