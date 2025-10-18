@@ -11,6 +11,13 @@ import { renderDir } from './dir.js'
 import { renderTempo } from './tempo.js'
 import { renderDynam } from './dynam.js'
 import { renderCurve } from './curve.js'
+import { renderHairpin } from './hairpin.js'
+import { renderTrill } from './trill.js'
+import { renderOctave } from './octave.js'
+import { renderFermata } from './fermata.js'
+import { renderPedal } from './pedal.js'
+import { renderWord } from './word.js'
+import { renderFing } from './fing.js'
 import { renderDel } from './del.js'
 import { renderMetaMarkClarification, renderMetaMarkNavigation } from './metaMark.js'
 
@@ -116,6 +123,41 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.curves.forEach(curve => {
       const rastrum = context.rastrums.find(r => r.id === curve.rastrum)
       renderCurve(curve, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.hairpins.forEach(hairpin => {
+      const rastrum = context.rastrums.find(r => r.id === hairpin.rastrum)
+      renderHairpin(hairpin, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.trills.forEach(trill => {
+      const rastrum = context.rastrums.find(r => r.id === trill.rastrum)
+      renderTrill(trill, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.octaves.forEach(octave => {
+      const rastrum = context.rastrums.find(r => r.id === octave.rastrum)
+      renderOctave(octave, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.fermatas.forEach(fermata => {
+      const rastrum = context.rastrums.find(r => r.id === fermata.rastrum)
+      renderFermata(fermata, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.pedals.forEach(pedal => {
+      const rastrum = context.rastrums.find(r => r.id === pedal.rastrum)
+      renderPedal(pedal, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.words.forEach(word => {
+      const rastrum = context.rastrums.find(r => r.id === word.rastrum)
+      renderWord(word, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.fings.forEach(fing => {
+      const rastrum = context.rastrums.find(r => r.id === fing.rastrum)
+      renderFing(fing, systemG, rastrum, context, svg)
     })
 
     system.controlEvents.metaMarkClarifications.forEach(clarification => {

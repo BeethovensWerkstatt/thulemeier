@@ -450,9 +450,9 @@ export class MEIParser {
       }
     })
 
-    // fermata, pedal, hairpin
+    // pedal
 
-    return { barLines, beams, dirs, tempos, dynams, curves, metaMarkClarifications, metaMarkNavigations }
+    return { barLines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, metaMarkClarifications, metaMarkNavigations }
   }
 
   /**
