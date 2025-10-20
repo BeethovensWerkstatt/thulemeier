@@ -18,14 +18,20 @@ export function renderDot (dotObj, staffG, rastrum, context, svg) {
 
   // Create the dot group
   const dotG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  dotG.setAttribute('class', 'dot')
+  dotG.setAttribute('class', 'dot ' + dotObj.type)
   dotG.setAttribute('data-id', dotObj.id)
-  dotG.setAttribute('data-class', 'dot')
+  dotG.setAttribute('data-class', 'dot ' + dotObj.type)
 
   // Calculate position
   const cx = rastrumX + (dotObj.x * context.options.baseScaling || 0) - dotRadius
-  const loc = dotObj.loc % 2 === 1 ? dotObj.loc : dotObj.loc + 1
-  const cy = loc0Y - (loc * vuStepSize)
+  let cy
+
+  if (dotObj.type === 'augmentation') {
+    const loc = dotObj.loc % 2 === 1 ? dotObj.loc : dotObj.loc + 1
+    cy = loc0Y - (loc * vuStepSize)
+  } else if (dotObj.y) {
+    cy = rastrum.svgY + (dotObj.y * context.options.baseScaling || 0) - dotRadius
+  }
 
   // Create the ellipse
   const ellipse = doc.createElementNS('http://www.w3.org/2000/svg', 'ellipse')

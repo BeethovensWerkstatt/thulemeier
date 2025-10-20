@@ -265,6 +265,8 @@ export class MEIParser {
       const dots = [...system.querySelectorAll('staff[n="' + n + '"] layer > dot')].map(dot => ({
         id: dot.getAttribute('xml:id'),
         x: Math.round(parseFloat(dot.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(dot.getAttribute('y')) * 100) / 100,
+        type: dot.getAttribute('type') || 'augmentation',
         loc: parseInt(dot.getAttribute('loc')),
         facs: dot.getAttribute('facs'),
         element: dot
