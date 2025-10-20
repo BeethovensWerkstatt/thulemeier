@@ -21,6 +21,7 @@ import { renderFing } from './fing.js'
 import { renderF } from './f.js'
 import { renderDel } from './del.js'
 import { renderArtic } from './artic.js'
+import { renderNum } from './num.js'
 import { renderMetaMarkClarification, renderMetaMarkNavigation } from './metaMark.js'
 
 /**
@@ -97,6 +98,12 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       staff.artics.forEach(artic => {
         renderArtic(artic, staffG, rastrum, context, svg)
       })
+
+      // Render tuplet numbers
+      staff.tupletNums.forEach(num => {
+        renderNum(num, staffG, rastrum, context, svg)
+      })
+
       systemG.appendChild(staffG)
     })
 

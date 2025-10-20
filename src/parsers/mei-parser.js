@@ -289,8 +289,18 @@ export class MEIParser {
           element: artic
         }
       })
+      const tupletNums = [...system.querySelectorAll('num[type="tuplet"]')].map(num => {
+        return {
+          id: num.getAttribute('xml:id'),
+          x: Math.round(parseFloat(num.getAttribute('x')) * 100) / 100,
+          y: Math.round(parseFloat(num.getAttribute('y')) * 100) / 100,
+          content: num.textContent,
+          facs: num.getAttribute('facs'),
+          element: num
+        }
+      })
 
-      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots, meterSigs, artics })
+      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots, meterSigs, artics, tupletNums })
     })
     return staves
   }
