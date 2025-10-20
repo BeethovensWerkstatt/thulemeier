@@ -25,8 +25,6 @@ export function renderArtic (articObj, systemG, rastrum, context, svg) {
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
-  console.log(311, 'Rendering articulation:', articObj, rastrum)
-
   // Determine which symbol to use based on 'artic' attribute
   const articType = articObj.artic || 'dot'
 

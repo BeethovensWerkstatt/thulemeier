@@ -32,8 +32,6 @@ export function calculateDimensions (meiDocument, options) {
     rotation = graphicTarget && graphicTarget.includes('rotate=') ? graphicTarget.split('rotate=')[1] : null
   }
 
-  console.log('Calculated dimensions:', { width, height, rotation })
-
   const scaling = options.baseScaling || 90
 
   return {

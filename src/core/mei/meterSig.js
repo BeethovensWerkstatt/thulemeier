@@ -149,7 +149,5 @@ export function renderMeterSig (meterSig, staffG, rastrum, context, svg) {
     meterSigG.appendChild(symUse)
   }
 
-  console.log(333, 'Rendering meterSig:', meterSigG)
-
   staffG.appendChild(meterSigG)
 }

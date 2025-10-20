@@ -12,7 +12,6 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
-  // console.log('Rendering dir:', dirObj)
   const rastrumX = rastrum.svgX
   const rastrumY = rastrum.svgY
 
@@ -35,8 +34,6 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
   textEl.setAttribute('text-anchor', 'start')
   textEl.setAttribute('font-size', '0px')
   if (textLength) textEl.setAttribute('textLength', textLength)
-
-  // console.log(881, rastrum, context)
 
   // mm = rastrum.vuStepSize * 8 / rastrum.h = px/mm
   const pxPerMm = (rastrum.vuStepSize * 8) / rastrum.h
