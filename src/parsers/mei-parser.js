@@ -313,6 +313,7 @@ export class MEIParser {
       x2: Math.round(parseFloat(barLine.getAttribute('x2')) * 100) / 100,
       y2: Math.round(parseFloat(barLine.getAttribute('y2')) * 100) / 100,
       facs: barLine.getAttribute('facs'),
+      form: barLine.getAttribute('form'),
       rastrum: rastrums[0],
       element: barLine
     }))

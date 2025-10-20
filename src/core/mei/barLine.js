@@ -1,4 +1,5 @@
 const barLineWidth = 27
+const endBarLineWidth = 90
 
 /**
  * Renders a single bar line into the given staff group
@@ -28,7 +29,11 @@ export function renderBarLine (barLineObj, staffG, rastrum, context, svg) {
 
   const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
   path.setAttribute('d', `M${x1} ${y1} L${x2} ${y2}`)
-  path.setAttribute('stroke-width', barLineWidth)
+  if (barLineObj.form === 'end') {
+    path.setAttribute('stroke-width', endBarLineWidth)
+  } else {
+    path.setAttribute('stroke-width', barLineWidth)
+  }
   // path.setAttribute('stroke', 'black')
 
   barLineG.appendChild(path)
