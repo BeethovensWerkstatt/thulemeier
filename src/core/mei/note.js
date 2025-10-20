@@ -26,7 +26,6 @@ export function renderNote (note, staffG, rastrum, context, svg) {
 
   const defs = svg.querySelector('defs')
   const symbolAvailable = defs.querySelector('#' + symbolId)
-  // console.log('defs: ' + svg.querySelectorAll('g').length + svg.firstElementChild.localName)
 
   if (!symbolAvailable) {
     console.warn(`Notehead symbol ${symbolId} not found in SVG defs`)

@@ -20,7 +20,6 @@ export class FullPageRenderer {
     renderRastrums(meiDocument, svg, context)
 
     const allDrafts = context.drafts
-    // console.log('drafts: ', JSON.stringify(allDrafts, null, 2))
     allDrafts.forEach(draft => {
       renderDraft(draft, svg, context)
     })

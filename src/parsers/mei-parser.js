@@ -165,10 +165,7 @@ export class MEIParser {
     return Array.from(wzs).map(wz => {
       const id = wz.getAttribute('xml:id')
       const label = wz.getAttribute('label') || ''
-      // console.log('Writing zone:', { id, label })
-      // console.log('Sources:', sources[0].outerHTML)
       const sourceId = sources.find(s => s.getAttribute('target').endsWith('#' + id)).getAttribute('xml:id') || null
-      // console.log('Matched sourceId:', sourceId)
       const draft = drafts.find(d => d.getAttribute('decls') === '#' + sourceId)
       const deletions = this.extractDeletions(draft)
 

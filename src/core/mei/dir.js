@@ -12,7 +12,7 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
-  console.log('Rendering dir:', dirObj)
+  // console.log('Rendering dir:', dirObj)
   const rastrumX = rastrum.svgX
   const rastrumY = rastrum.svgY
 
