@@ -279,8 +279,18 @@ export class MEIParser {
         unit: meterSig.hasAttribute('sym') ? null : meterSig.getAttribute('unit'),
         element: meterSig
       }))
+      const artics = [...system.querySelectorAll('artic')].map(artic => {
+        return {
+          id: artic.getAttribute('xml:id'),
+          x: Math.round(parseFloat(artic.getAttribute('x')) * 100) / 100,
+          y: Math.round(parseFloat(artic.getAttribute('y')) * 100) / 100,
+          artic: artic.getAttribute('artic'),
+          facs: artic.getAttribute('facs'),
+          element: artic
+        }
+      })
 
-      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots, meterSigs })
+      staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots, meterSigs, artics })
     })
     return staves
   }
@@ -388,6 +398,124 @@ export class MEIParser {
       }
     })
 
+    const hairpins = [...system.querySelectorAll('hairpin')].map(hairpin => {
+      const staff = hairpin.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: hairpin.getAttribute('xml:id'),
+        x: Math.round(parseFloat(hairpin.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(hairpin.getAttribute('y')) * 100) / 100,
+        x2: Math.round(parseFloat(hairpin.getAttribute('x2')) * 100) / 100,
+        y2: Math.round(parseFloat(hairpin.getAttribute('y2')) * 100) / 100,
+        opening: Math.round(parseFloat(hairpin.getAttribute('opening')) * 100) / 100,
+        startOpening: Math.round(parseFloat(hairpin.getAttribute('bw:start.opening')) * 100) / 100,
+        form: hairpin.getAttribute('form'),
+        facs: hairpin.getAttribute('facs'),
+        rastrum,
+        element: hairpin
+      }
+    })
+
+    const trills = [...system.querySelectorAll('trill')].map(trill => {
+      const staff = trill.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: trill.getAttribute('xml:id'),
+        x: Math.round(parseFloat(trill.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(trill.getAttribute('y')) * 100) / 100,
+        facs: trill.getAttribute('facs'),
+        rastrum,
+        element: trill
+      }
+    })
+
+    const octaves = [...system.querySelectorAll('octave')].map(octave => {
+      const staff = octave.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: octave.getAttribute('xml:id'),
+        x: Math.round(parseFloat(octave.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(octave.getAttribute('y')) * 100) / 100,
+        width: Math.round(parseFloat(octave.getAttribute('width')) * 100) / 100,
+        dis: octave.getAttribute('dis'),
+        disPlace: octave.getAttribute('dis.place'),
+        facs: octave.getAttribute('facs'),
+        rastrum,
+        element: octave
+      }
+    })
+
+    const fermatas = [...system.querySelectorAll('fermata')].map(fermata => {
+      const staff = fermata.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: fermata.getAttribute('xml:id'),
+        x: Math.round(parseFloat(fermata.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(fermata.getAttribute('y')) * 100) / 100,
+        form: fermata.getAttribute('form'),
+        facs: fermata.getAttribute('facs'),
+        rastrum,
+        element: fermata
+      }
+    })
+
+    const pedals = [...system.querySelectorAll('pedal')].map(pedal => {
+      const staff = pedal.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: pedal.getAttribute('xml:id'),
+        x: Math.round(parseFloat(pedal.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(pedal.getAttribute('y')) * 100) / 100,
+        dir: pedal.getAttribute('dir'),
+        facs: pedal.getAttribute('facs'),
+        rastrum,
+        element: pedal
+      }
+    })
+
+    const words = [...system.querySelectorAll('word')].map(word => {
+      const staff = word.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: word.getAttribute('xml:id'),
+        x: Math.round(parseFloat(word.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(word.getAttribute('y')) * 100) / 100,
+        width: Math.round(parseFloat(word.getAttribute('width')) * 100) / 100,
+        content: word.textContent.trim() || '', // we need to be able to get mixed content
+        facs: word.getAttribute('facs'),
+        rastrum,
+        element: word
+      }
+    })
+
+    const fings = [...system.querySelectorAll('fing')].map(fing => {
+      const staff = fing.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: fing.getAttribute('xml:id'),
+        x: Math.round(parseFloat(fing.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(fing.getAttribute('y')) * 100) / 100,
+        content: fing.textContent.trim() || '', // we need to be able to get mixed content
+        facs: fing.getAttribute('facs'),
+        rastrum,
+        element: fing
+      }
+    })
+
+    const fs = [...system.querySelectorAll('f')].map(f => {
+      const staff = f.getAttribute('staff')
+      const rastrum = rastrums[parseInt(staff) - 1]
+      return {
+        id: f.getAttribute('xml:id'),
+        x: Math.round(parseFloat(f.getAttribute('x')) * 100) / 100,
+        y: Math.round(parseFloat(f.getAttribute('y')) * 100) / 100,
+        content: f.textContent.trim() || '', // we need to be able to get mixed content
+        facs: f.getAttribute('facs'),
+        rastrum,
+        element: f
+      }
+    })
+
     const metaMarkClarifications = [...system.querySelectorAll('metaMark[function="clarification"]')].map(metaMark => {
       const staff = metaMark.getAttribute('staff')
       const rastrum = rastrums[parseInt(staff) - 1]
@@ -449,7 +577,7 @@ export class MEIParser {
 
     // pedal
 
-    return { barLines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, metaMarkClarifications, metaMarkNavigations }
+    return { barLines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, fs, metaMarkClarifications, metaMarkNavigations }
   }
 
   /**

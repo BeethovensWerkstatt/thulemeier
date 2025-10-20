@@ -18,7 +18,9 @@ import { renderFermata } from './fermata.js'
 import { renderPedal } from './pedal.js'
 import { renderWord } from './word.js'
 import { renderFing } from './fing.js'
+import { renderF } from './f.js'
 import { renderDel } from './del.js'
+import { renderArtic } from './artic.js'
 import { renderMetaMarkClarification, renderMetaMarkNavigation } from './metaMark.js'
 
 /**
@@ -90,6 +92,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       staff.meterSigs.forEach(meterSig => {
         renderMeterSig(meterSig, staffG, rastrum, context, svg)
       })
+
+      // Render articulations
+      staff.artics.forEach(artic => {
+        renderArtic(artic, staffG, rastrum, context, svg)
+      })
       systemG.appendChild(staffG)
     })
 
@@ -158,6 +165,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.fings.forEach(fing => {
       const rastrum = context.rastrums.find(r => r.id === fing.rastrum)
       renderFing(fing, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.fs.forEach(f => {
+      const rastrum = context.rastrums.find(r => r.id === f.rastrum)
+      renderF(f, systemG, rastrum, context, svg)
     })
 
     system.controlEvents.metaMarkClarifications.forEach(clarification => {
