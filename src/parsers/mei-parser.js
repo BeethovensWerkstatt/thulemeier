@@ -332,6 +332,7 @@ export class MEIParser {
 
     const beams = [...system.querySelectorAll('line[func="beam"]')].map(beam => ({
       id: beam.getAttribute('xml:id'),
+      func: 'beam',
       x: Math.round(parseFloat(beam.getAttribute('x')) * 100) / 100,
       y: Math.round(parseFloat(beam.getAttribute('y')) * 100) / 100,
       x2: Math.round(parseFloat(beam.getAttribute('x2')) * 100) / 100,
@@ -339,6 +340,18 @@ export class MEIParser {
       facs: beam.getAttribute('facs'),
       rastrum: rastrums[parseInt(beam.getAttribute('staff')) - 1],
       element: beam
+    }))
+
+    const repeats = [...system.querySelectorAll('line[func="repeat"]')].map(repeat => ({
+      id: repeat.getAttribute('xml:id'),
+      func: 'repeat',
+      x: Math.round(parseFloat(repeat.getAttribute('x')) * 100) / 100,
+      y: Math.round(parseFloat(repeat.getAttribute('y')) * 100) / 100,
+      x2: Math.round(parseFloat(repeat.getAttribute('x2')) * 100) / 100,
+      y2: Math.round(parseFloat(repeat.getAttribute('y2')) * 100) / 100,
+      facs: repeat.getAttribute('facs'),
+      rastrum: rastrums[parseInt(repeat.getAttribute('staff')) - 1],
+      element: repeat
     }))
 
     const dirs = [...system.querySelectorAll('dir')].map(dir => {
@@ -590,7 +603,7 @@ export class MEIParser {
 
     // pedal
 
-    return { barLines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, fs, metaMarkClarifications, metaMarkNavigations }
+    return { barLines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, fs, repeats, metaMarkClarifications, metaMarkNavigations }
   }
 
   /**

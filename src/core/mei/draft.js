@@ -22,6 +22,7 @@ import { renderF } from './f.js'
 import { renderDel } from './del.js'
 import { renderArtic } from './artic.js'
 import { renderNum } from './num.js'
+import { renderLine } from './line.js'
 import { renderMetaMarkClarification, renderMetaMarkNavigation } from './metaMark.js'
 
 /**
@@ -117,6 +118,11 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
     system.controlEvents.beams.forEach(beam => {
       const rastrum = context.rastrums.find(r => r.id === beam.rastrum)
       renderBeam(beam, systemG, rastrum, context, svg)
+    })
+
+    system.controlEvents.repeats.forEach(repeat => {
+      const rastrum = context.rastrums.find(r => r.id === repeat.rastrum)
+      renderLine(repeat, systemG, rastrum, context, svg)
     })
 
     system.controlEvents.dirs.forEach(dir => {
