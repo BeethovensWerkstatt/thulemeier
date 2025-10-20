@@ -18,7 +18,7 @@ export function renderDynam (dynamObj, systemG, rastrum, context, svg) {
   const x = rastrumX + (dynamObj.x * context.options.baseScaling || 0)
   const y = rastrumY + (dynamObj.y * context.options.baseScaling || 0)
   const textLength = dynamObj.width ? (dynamObj.width * context.options.baseScaling || 0) + 'px' : undefined
-  const textContent = dynamObj.text || ''
+  const textContent = dynamObj.content || ''
 
   // Create the dynamic group
   const dynamG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
