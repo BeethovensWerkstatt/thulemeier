@@ -22,9 +22,9 @@ export function renderTempo (tempoObj, systemG, rastrum, context, svg) {
 
   // Create the tempo group
   const tempoG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  tempoG.setAttribute('class', 'tempo')
+  tempoG.setAttribute('class', 'tempo' + (tempoObj.unclear ? ' unclear' : ''))
   tempoG.setAttribute('data-id', tempoObj.id)
-  tempoG.setAttribute('data-class', 'tempo')
+  tempoG.setAttribute('data-class', 'tempo' + (tempoObj.unclear ? ' unclear' : ''))
 
   const textEl = doc.createElementNS('http://www.w3.org/2000/svg', 'text')
   textEl.setAttribute('x', x)

@@ -26,9 +26,9 @@ export function renderHairpin (hairpinObj, systemG, rastrum, context, svg) {
 
   // Create the hairpin group
   const hairpinG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  hairpinG.setAttribute('class', 'hairpin')
+  hairpinG.setAttribute('class', 'hairpin' + (hairpinObj.form || '') + (hairpinObj.unclear ? ' unclear' : ''))
   hairpinG.setAttribute('data-id', hairpinObj.id)
-  hairpinG.setAttribute('data-class', 'hairpin ' + (hairpinObj.form || ''))
+  hairpinG.setAttribute('data-class', 'hairpin ' + (hairpinObj.form || '') + (hairpinObj.unclear ? ' unclear' : ''))
 
   // Create polyline with standard attributes
   function createPolyline () {

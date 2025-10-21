@@ -53,7 +53,7 @@ export function renderAccid (accidObj, staffG, rastrum, context, svg) {
 
   // Create the accidental group
   const accidG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  accidG.setAttribute('class', 'accid')
+  accidG.setAttribute('class', 'accid' + (accidObj.unclear ? ' unclear' : ''))
   accidG.setAttribute('data-id', accidObj.id)
 
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

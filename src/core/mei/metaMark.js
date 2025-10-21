@@ -70,9 +70,9 @@ export function renderMetaMarkNavigation (navigationObj, systemG, rastrum, conte
 
   // Create the navigation group
   const navigationG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  navigationG.setAttribute('class', 'metaMark navigation')
+  navigationG.setAttribute('class', 'metaMark navigation' + (navigationObj.unclear ? ' unclear' : ''))
   navigationG.setAttribute('data-id', navigationObj.id)
-  navigationG.setAttribute('data-class', 'metaMark navigation')
+  navigationG.setAttribute('data-class', 'metaMark navigation' + (navigationObj.unclear ? ' unclear' : ''))
 
   const textEl = doc.createElementNS('http://www.w3.org/2000/svg', 'text')
   textEl.setAttribute('x', x)

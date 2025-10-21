@@ -22,9 +22,9 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
 
   // Create the direction group
   const dirG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  dirG.setAttribute('class', 'dir')
+  dirG.setAttribute('class', 'dir' + (dirObj.unclear ? ' unclear' : ''))
   dirG.setAttribute('data-id', dirObj.id)
-  dirG.setAttribute('data-class', 'dir')
+  dirG.setAttribute('data-class', 'dir' + (dirObj.unclear ? ' unclear' : ''))
   dirG.setAttribute('id', dirObj.id)
   dirG.setAttribute('style', 'font-style: italic;')
 

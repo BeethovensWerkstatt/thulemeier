@@ -56,7 +56,7 @@ export function renderRest (rest, staffG, rastrum, context, svg) {
 
   // Create the rest group
   const restG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  restG.setAttribute('class', 'rest')
+  restG.setAttribute('class', 'rest' + (rest.unclear ? ' unclear' : ''))
   restG.setAttribute('data-id', rest.id)
 
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

@@ -82,7 +82,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
 
   // Create the note group
   const noteG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  noteG.setAttribute('class', 'note')
+  noteG.setAttribute('class', 'note' + (note.unclear ? ' unclear' : ''))
   noteG.setAttribute('data-id', note.id)
   if (note.stemDir) noteG.setAttribute('data-stem.dir', note.stemDir)
 

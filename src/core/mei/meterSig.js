@@ -114,7 +114,7 @@ export function renderMeterSig (meterSig, staffG, rastrum, context, svg) {
 
   // Create the meterSig group
   const meterSigG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  meterSigG.setAttribute('class', 'meterSig')
+  meterSigG.setAttribute('class', 'meterSig' + (meterSig.unclear ? ' unclear' : ''))
   meterSigG.setAttribute('data-id', meterSig.id)
 
   const x = rastrumX + (meterSig.x * context.options.baseScaling || 0)

@@ -26,9 +26,9 @@ export function renderNum (numObj, systemG, rastrum, context, svg) {
 
   // Create the num group
   const numG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  numG.setAttribute('class', 'num ' + numObj.type)
+  numG.setAttribute('class', 'num ' + numObj.type + (numObj.unclear ? ' unclear' : ''))
   numG.setAttribute('data-id', numObj.id)
-  numG.setAttribute('data-class', 'num ' + numObj.type)
+  numG.setAttribute('data-class', 'num ' + numObj.type + (numObj.unclear ? ' unclear' : ''))
 
   const textEl = doc.createElementNS('http://www.w3.org/2000/svg', 'text')
   textEl.setAttribute('x', x)

@@ -54,7 +54,7 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
 
   // Create the chord group
   const chordG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  chordG.setAttribute('class', 'chord')
+  chordG.setAttribute('class', 'chord' + (chord.unclear ? ' unclear' : ''))
   chordG.setAttribute('data-id', chord.id)
   if (chord.stemDir) chordG.setAttribute('data-stem.dir', chord.stemDir)
 

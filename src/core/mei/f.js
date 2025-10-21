@@ -22,9 +22,9 @@ export function renderF (fObj, systemG, rastrum, context, svg) {
 
   // Create the f group
   const fG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  fG.setAttribute('class', 'f')
+  fG.setAttribute('class', 'f' + (fObj.unclear ? ' unclear' : ''))
   fG.setAttribute('data-id', fObj.id)
-  fG.setAttribute('data-class', 'f')
+  fG.setAttribute('data-class', 'f' + (fObj.unclear ? ' unclear' : ''))
 
   const textEl = doc.createElementNS('http://www.w3.org/2000/svg', 'text')
   textEl.setAttribute('x', x)

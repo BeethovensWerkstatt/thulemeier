@@ -70,7 +70,7 @@ export function renderCurve (curveObj, staffG, rastrum, context, svg) {
 
   // Create the curve group
   const curveG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  curveG.setAttribute('class', 'curve')
+  curveG.setAttribute('class', 'curve' + (curveObj.unclear ? ' unclear' : ''))
   curveG.setAttribute('data-id', curveObj.id)
   curveG.setAttribute('data-class', 'curve')
 

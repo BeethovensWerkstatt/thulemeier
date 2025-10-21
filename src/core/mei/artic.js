@@ -44,7 +44,7 @@ export function renderArtic (articObj, systemG, rastrum, context, svg) {
 
   // Create the articulation group
   const articG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  articG.setAttribute('class', 'artic ' + articType)
+  articG.setAttribute('class', 'artic ' + articType + (articObj.unclear ? ' unclear' : ''))
   articG.setAttribute('data-id', articObj.id)
   articG.setAttribute('data-class', 'artic')
 

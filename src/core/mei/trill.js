@@ -23,9 +23,9 @@ export function renderTrill (trillObj, systemG, rastrum, context, svg) {
 
   // Create the trill group
   const trillG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  trillG.setAttribute('class', 'trill')
+  trillG.setAttribute('class', 'trill' + (trillObj.unclear ? ' unclear' : ''))
   trillG.setAttribute('data-id', trillObj.id)
-  trillG.setAttribute('data-class', 'trill')
+  trillG.setAttribute('data-class', 'trill' + (trillObj.unclear ? ' unclear' : ''))
 
   // Create the use element
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

@@ -11,8 +11,8 @@ export function renderDel (del, containerG, context, svg) {
 
   const g = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
   g.setAttribute('data-id', del.id)
-  g.setAttribute('data-class', 'del')
-  g.setAttribute('class', 'del')
+  g.setAttribute('data-class', 'del' + (del.unclear ? ' unclear' : ''))
+  g.setAttribute('class', 'del' + (del.unclear ? ' unclear' : ''))
 
   containerG.append(g)
 

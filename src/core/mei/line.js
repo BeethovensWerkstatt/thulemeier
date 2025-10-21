@@ -23,8 +23,8 @@ export function renderLine (lineObj, staffG, rastrum, context, svg) {
 
   // Create the line group
   const lineG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  lineG.setAttribute('class', 'line ' + lineObj.func)
-  lineG.setAttribute('data-class', 'line ' + lineObj.func)
+  lineG.setAttribute('class', 'line ' + lineObj.func + (lineObj.unclear ? ' unclear' : ''))
+  lineG.setAttribute('data-class', 'line ' + lineObj.func + (lineObj.unclear ? ' unclear' : ''))
   lineG.setAttribute('data-id', lineObj.id)
   lineG.setAttribute('style', 'transform: rotate(' + rastrum.rotate + 'deg); transform-origin: ' + rastrumX + 'px ' + rastrumY + 'px;')
 

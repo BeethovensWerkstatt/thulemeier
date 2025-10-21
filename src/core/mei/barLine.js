@@ -24,7 +24,7 @@ export function renderBarLine (barLineObj, staffG, rastrum, context, svg) {
 
   // Create the bar line group
   const barLineG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  barLineG.setAttribute('class', 'barLine')
+  barLineG.setAttribute('class', 'barLine' + (barLineObj.unclear ? ' unclear' : ''))
   barLineG.setAttribute('data-id', barLineObj.id)
 
   const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')

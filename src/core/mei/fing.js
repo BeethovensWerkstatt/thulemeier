@@ -24,9 +24,9 @@ export function renderFing (fingObj, systemG, rastrum, context, svg) {
 
   // Create the fing group
   const fingG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  fingG.setAttribute('class', 'fing')
+  fingG.setAttribute('class', 'fing' + (fingObj.unclear ? ' unclear' : ''))
   fingG.setAttribute('data-id', fingObj.id)
-  fingG.setAttribute('data-class', 'fing')
+  fingG.setAttribute('data-class', 'fing' + (fingObj.unclear ? ' unclear' : ''))
 
   const textEl = doc.createElementNS('http://www.w3.org/2000/svg', 'text')
   textEl.setAttribute('x', x)

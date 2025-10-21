@@ -57,7 +57,7 @@ export function renderClef (clefObj, staffG, rastrum, context, svg) {
 
   // Create the clef group
   const clefG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  clefG.setAttribute('class', 'clef')
+  clefG.setAttribute('class', 'clef' + (clefObj.unclear ? ' unclear' : ''))
   clefG.setAttribute('data-id', clefObj.id)
 
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

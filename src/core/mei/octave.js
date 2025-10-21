@@ -23,9 +23,9 @@ export function renderOctave (octaveObj, systemG, rastrum, context, svg) {
 
   // Create the octave group
   const octaveG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  octaveG.setAttribute('class', 'octave')
+  octaveG.setAttribute('class', 'octave' + (octaveObj.unclear ? ' unclear' : ''))
   octaveG.setAttribute('data-id', octaveObj.id)
-  octaveG.setAttribute('data-class', 'octave')
+  octaveG.setAttribute('data-class', 'octave' + (octaveObj.unclear ? ' unclear' : ''))
 
   // Create the use element for the octave symbol
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

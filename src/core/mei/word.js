@@ -23,9 +23,9 @@ export function renderWord (wordObj, systemG, rastrum, context, svg) {
 
   // Create the word group
   const wordG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  wordG.setAttribute('class', 'word')
+  wordG.setAttribute('class', 'word' + (wordObj.unclear ? ' unclear' : ''))
   wordG.setAttribute('data-id', wordObj.id)
-  wordG.setAttribute('data-class', 'word')
+  wordG.setAttribute('data-class', 'word' + (wordObj.unclear ? ' unclear' : ''))
 
   // Create the text element
   const text = doc.createElementNS('http://www.w3.org/2000/svg', 'text')

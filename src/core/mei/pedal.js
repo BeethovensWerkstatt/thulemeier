@@ -24,9 +24,9 @@ export function renderPedal (pedalObj, systemG, rastrum, context, svg) {
 
   // Create the pedal group
   const pedalG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  pedalG.setAttribute('class', 'pedal')
+  pedalG.setAttribute('class', 'pedal' + (pedalObj.unclear ? ' unclear' : ''))
   pedalG.setAttribute('data-id', pedalObj.id)
-  pedalG.setAttribute('data-class', 'pedal')
+  pedalG.setAttribute('data-class', 'pedal' + (pedalObj.unclear ? ' unclear' : ''))
 
   // Create the use element
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

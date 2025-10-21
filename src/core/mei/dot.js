@@ -18,9 +18,9 @@ export function renderDot (dotObj, staffG, rastrum, context, svg) {
 
   // Create the dot group
   const dotG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  dotG.setAttribute('class', 'dot ' + dotObj.type)
+  dotG.setAttribute('class', 'dot ' + dotObj.type + (dotObj.unclear ? ' unclear' : ''))
   dotG.setAttribute('data-id', dotObj.id)
-  dotG.setAttribute('data-class', 'dot ' + dotObj.type)
+  dotG.setAttribute('data-class', 'dot ' + dotObj.type + (dotObj.unclear ? ' unclear' : ''))
 
   // Calculate position
   const cx = rastrumX + (dotObj.x * context.options.baseScaling || 0) - dotRadius

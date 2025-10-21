@@ -23,9 +23,9 @@ export function renderFermata (fermataObj, systemG, rastrum, context, svg) {
 
   // Create the fermata group
   const fermataG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  fermataG.setAttribute('class', 'fermata')
+  fermataG.setAttribute('class', 'fermata' + (fermataObj.unclear ? ' unclear' : ''))
   fermataG.setAttribute('data-id', fermataObj.id)
-  fermataG.setAttribute('data-class', 'fermata')
+  fermataG.setAttribute('data-class', 'fermata' + (fermataObj.unclear ? ' unclear' : ''))
 
   // Create the use element
   const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')

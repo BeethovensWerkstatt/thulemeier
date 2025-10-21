@@ -22,9 +22,9 @@ export function renderDynam (dynamObj, systemG, rastrum, context, svg) {
 
   // Create the dynamic group
   const dynamG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
-  dynamG.setAttribute('class', 'dynam')
+  dynamG.setAttribute('class', 'dynam' + (dynamObj.unclear ? ' unclear' : ''))
   dynamG.setAttribute('data-id', dynamObj.id)
-  dynamG.setAttribute('data-class', 'dynam')
+  dynamG.setAttribute('data-class', 'dynam' + (dynamObj.unclear ? ' unclear' : ''))
   dynamG.setAttribute('id', dynamObj.id)
 
   const textEl = doc.createElementNS('http://www.w3.org/2000/svg', 'text')

@@ -214,7 +214,7 @@ export class MEIParser {
     system.querySelectorAll('staffDef').forEach(staffDef => {
       const n = staffDef.getAttribute('n')
       const rastrum = staffDef.getAttribute('decls').split('#')[1]
-      const notes = [...system.querySelectorAll('staff[n="' + n + '"] layer > note')].map(note => ({
+      const notes = [...system.querySelectorAll('staff[n="' + n + '"] layer > note, staff[n="' + n + '"] layer > unclear > note')].map(note => ({
         id: note.getAttribute('xml:id'),
         x: Math.round(parseFloat(note.getAttribute('x')) * 100) / 100,
         loc: parseInt(note.getAttribute('loc')),
@@ -223,9 +223,10 @@ export class MEIParser {
         headShape: note.getAttribute('head.shape') || 'quarter',
         flags: parseInt(note.getAttribute('bw:stem.flags')) || null,
         facs: note.getAttribute('facs'),
+        unclear: note.parentElement.tagName === 'unclear',
         element: note
       }))
-      const chords = [...system.querySelectorAll('staff[n="' + n + '"] layer > chord')].map(chord => ({
+      const chords = [...system.querySelectorAll('staff[n="' + n + '"] layer > chord, staff[n="' + n + '"] layer > unclear > chord')].map(chord => ({
         id: chord.getAttribute('xml:id'),
         x: chord.getAttribute('x'),
         stemDir: chord.getAttribute('stem.dir') || null,
@@ -237,41 +238,46 @@ export class MEIParser {
           headShape: note.getAttribute('head.shape') || 'quarter'
         })),
         facs: chord.getAttribute('facs'),
+        unclear: chord.parentElement.tagName === 'unclear',
         element: chord
       }))
-      const rests = [...system.querySelectorAll('staff[n="' + n + '"] layer > rest')].map(rest => ({
+      const rests = [...system.querySelectorAll('staff[n="' + n + '"] layer > rest, staff[n="' + n + '"] layer > unclear > rest')].map(rest => ({
         id: rest.getAttribute('xml:id'),
         x: Math.round(parseFloat(rest.getAttribute('x')) * 100) / 100,
         loc: parseInt(rest.getAttribute('loc')),
         facs: rest.getAttribute('facs'),
         type: rest.getAttribute('glyph.name'),
+        unclear: rest.parentElement.tagName === 'unclear',
         element: rest
       }))
-      const accids = [...system.querySelectorAll('staff[n="' + n + '"] layer > accid')].map(accid => ({
+      const accids = [...system.querySelectorAll('staff[n="' + n + '"] layer > accid, staff[n="' + n + '"] layer > unclear > accid')].map(accid => ({
         id: accid.getAttribute('xml:id'),
         x: Math.round(parseFloat(accid.getAttribute('x')) * 100) / 100,
         loc: parseInt(accid.getAttribute('loc')),
         facs: accid.getAttribute('facs'),
         accid: accid.getAttribute('accid'),
+        unclear: accid.parentElement.tagName === 'unclear',
         element: accid
       }))
-      const clefs = [...system.querySelectorAll('staff[n="' + n + '"] layer > clef')].map(clef => ({
+      const clefs = [...system.querySelectorAll('staff[n="' + n + '"] layer > clef, staff[n="' + n + '"] layer > unclear > clef')].map(clef => ({
         id: clef.getAttribute('xml:id'),
         x: clef.getAttribute('x'),
         shape: clef.getAttribute('shape'),
         line: clef.getAttribute('line'),
+        unclear: clef.parentElement.tagName === 'unclear',
         element: clef
       }))
-      const dots = [...system.querySelectorAll('staff[n="' + n + '"] layer > dot')].map(dot => ({
+      const dots = [...system.querySelectorAll('staff[n="' + n + '"] layer > dot, staff[n="' + n + '"] layer > unclear > dot')].map(dot => ({
         id: dot.getAttribute('xml:id'),
         x: Math.round(parseFloat(dot.getAttribute('x')) * 100) / 100,
         y: Math.round(parseFloat(dot.getAttribute('y')) * 100) / 100,
         type: dot.getAttribute('type') || 'augmentation',
         loc: parseInt(dot.getAttribute('loc')),
         facs: dot.getAttribute('facs'),
+        unclear: dot.parentElement.tagName === 'unclear',
         element: dot
       }))
-      const meterSigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > meterSig')].map(meterSig => ({
+      const meterSigs = [...system.querySelectorAll('staff[n="' + n + '"] layer > meterSig, staff[n="' + n + '"] layer > unclear > meterSig')].map(meterSig => ({
         id: meterSig.getAttribute('xml:id'),
         x: Math.round(parseFloat(meterSig.getAttribute('x')) * 100) / 100,
         loc: parseInt(meterSig.getAttribute('loc')),
@@ -279,6 +285,7 @@ export class MEIParser {
         symbol: meterSig.hasAttribute('sym') ? meterSig.getAttribute('sym') : null,
         count: meterSig.hasAttribute('sym') ? null : meterSig.getAttribute('count'),
         unit: meterSig.hasAttribute('sym') ? null : meterSig.getAttribute('unit'),
+        unclear: meterSig.parentElement.tagName === 'unclear',
         element: meterSig
       }))
       const artics = [...system.querySelectorAll('artic')].map(artic => {
@@ -288,6 +295,7 @@ export class MEIParser {
           y: Math.round(parseFloat(artic.getAttribute('y')) * 100) / 100,
           artic: artic.getAttribute('artic'),
           facs: artic.getAttribute('facs'),
+          unclear: artic.parentElement.tagName === 'unclear',
           element: artic
         }
       })
@@ -298,6 +306,7 @@ export class MEIParser {
           y: Math.round(parseFloat(num.getAttribute('y')) * 100) / 100,
           content: num.textContent,
           facs: num.getAttribute('facs'),
+          unclear: num.parentElement.tagName === 'unclear',
           element: num
         }
       })
@@ -327,6 +336,7 @@ export class MEIParser {
       facs: barLine.getAttribute('facs'),
       form: barLine.getAttribute('form'),
       rastrum: rastrums[0],
+      unclear: barLine.parentElement.tagName === 'unclear',
       element: barLine
     }))
 
@@ -339,6 +349,7 @@ export class MEIParser {
       y2: Math.round(parseFloat(beam.getAttribute('y2')) * 100) / 100,
       facs: beam.getAttribute('facs'),
       rastrum: rastrums[parseInt(beam.getAttribute('staff')) - 1],
+      unclear: beam.parentElement.tagName === 'unclear',
       element: beam
     }))
 
@@ -354,6 +365,7 @@ export class MEIParser {
       y2: Math.round(parseFloat(repeat.getAttribute('y2')) * 100) / 100,
       facs: repeat.getAttribute('facs'),
       rastrum: rastrums[parseInt(repeat.getAttribute('staff')) - 1],
+      unclear: repeat.parentElement.tagName === 'unclear',
       element: repeat
     }))
 
@@ -408,6 +420,7 @@ export class MEIParser {
         lineheight: parseFloat(dir.getAttribute('lineheight')) || null,
         rotation: parseFloat(dir.getAttribute('rotation')) || null,
         rastrum,
+        unclear: dir.parentElement.tagName === 'unclear',
         element: dir
       }
     })
@@ -423,6 +436,7 @@ export class MEIParser {
         content: tempo.textContent.trim() || '', // we need to be able to get mixed content
         facs: tempo.getAttribute('facs'),
         rastrum,
+        unclear: tempo.parentElement.tagName === 'unclear',
         element: tempo
       }
     })
@@ -441,6 +455,7 @@ export class MEIParser {
         form: hairpin.getAttribute('form'),
         facs: hairpin.getAttribute('facs'),
         rastrum,
+        unclear: hairpin.parentElement.tagName === 'unclear',
         element: hairpin
       }
     })
@@ -454,6 +469,7 @@ export class MEIParser {
         y: Math.round(parseFloat(trill.getAttribute('y')) * 100) / 100,
         facs: trill.getAttribute('facs'),
         rastrum,
+        unclear: trill.parentElement.tagName === 'unclear',
         element: trill
       }
     })
@@ -470,6 +486,7 @@ export class MEIParser {
         disPlace: octave.getAttribute('dis.place'),
         facs: octave.getAttribute('facs'),
         rastrum,
+        unclear: octave.parentElement.tagName === 'unclear',
         element: octave
       }
     })
@@ -484,6 +501,7 @@ export class MEIParser {
         form: fermata.getAttribute('form'),
         facs: fermata.getAttribute('facs'),
         rastrum,
+        unclear: fermata.parentElement.tagName === 'unclear',
         element: fermata
       }
     })
@@ -498,6 +516,7 @@ export class MEIParser {
         dir: pedal.getAttribute('dir'),
         facs: pedal.getAttribute('facs'),
         rastrum,
+        unclear: pedal.parentElement.tagName === 'unclear',
         element: pedal
       }
     })
@@ -513,6 +532,7 @@ export class MEIParser {
         content: word.textContent.trim() || '', // we need to be able to get mixed content
         facs: word.getAttribute('facs'),
         rastrum,
+        unclear: word.parentElement.tagName === 'unclear',
         element: word
       }
     })
@@ -527,6 +547,7 @@ export class MEIParser {
         content: fing.textContent.trim() || '', // we need to be able to get mixed content
         facs: fing.getAttribute('facs'),
         rastrum,
+        unclear: fing.parentElement.tagName === 'unclear',
         element: fing
       }
     })
@@ -541,6 +562,7 @@ export class MEIParser {
         content: f.textContent.trim() || '', // we need to be able to get mixed content
         facs: f.getAttribute('facs'),
         rastrum,
+        unclear: f.parentElement.tagName === 'unclear',
         element: f
       }
     })
@@ -557,6 +579,7 @@ export class MEIParser {
         content: metaMark.textContent.trim() || '', // we need to be able to get mixed content
         facs: metaMark.getAttribute('facs'),
         rastrum,
+        unclear: metaMark.parentElement.tagName === 'unclear',
         element: metaMark
       }
     })
@@ -574,6 +597,7 @@ export class MEIParser {
         content: metaMark.textContent.trim() || '', // we need to be able to get mixed content
         facs: metaMark.getAttribute('facs'),
         rastrum: rastrums[0],
+        unclear: metaMark.parentElement.tagName === 'unclear',
         element: metaMark
       }
     })
@@ -589,6 +613,7 @@ export class MEIParser {
         content: dynam.textContent.trim() || '', // we need to be able to get mixed content
         facs: dynam.getAttribute('facs'),
         rastrum,
+        unclear: dynam.parentElement.tagName === 'unclear',
         element: dynam
       }
     })
@@ -600,6 +625,7 @@ export class MEIParser {
         rastrum,
         bezier: curve.getAttribute('bezier') || null,
         facs: curve.getAttribute('facs'),
+        unclear: curve.parentElement.tagName === 'unclear',
         element: curve
       }
     })
@@ -621,6 +647,7 @@ export class MEIParser {
       deletions.push({
         id: del.getAttribute('xml:id'),
         path: del.querySelector('path').getAttribute('d'),
+        unclear: del.parentElement.tagName === 'unclear',
         element: del
       })
     })
