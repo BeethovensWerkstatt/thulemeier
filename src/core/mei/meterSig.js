@@ -29,7 +29,7 @@ export function renderMeterSig (meterSig, staffG, rastrum, context, svg) {
   const symSymbolId = sym ? 'sym_meterSig_' + sym : null
 
   const addSymbol = (id, defs) => {
-    console.warn(`Meter signature symbol ${id} not found in SVG defs`)
+    // console.warn(`Meter signature symbol ${id} not found in SVG defs`)
     const symbol = doc.createElementNS('http://www.w3.org/2000/svg', 'symbol')
     symbol.setAttribute('id', id)
     symbol.setAttribute('viewBox', '0 0 1000 1000')

@@ -24,7 +24,7 @@ export function renderRest (rest, staffG, rastrum, context, svg) {
   const symbolAvailable = defs.querySelector('#' + symbolId)
 
   if (!symbolAvailable) {
-    console.warn(`Rest symbol ${symbolId} not found in SVG defs`)
+    // console.warn(`Rest symbol ${symbolId} not found in SVG defs`)
     const symbol = doc.createElementNS('http://www.w3.org/2000/svg', 'symbol')
     symbol.setAttribute('id', symbolId)
     symbol.setAttribute('viewBox', '0 0 1000 1000')

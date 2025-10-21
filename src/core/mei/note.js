@@ -28,7 +28,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
   const symbolAvailable = defs.querySelector('#' + symbolId)
 
   if (!symbolAvailable) {
-    console.warn(`Notehead symbol ${symbolId} not found in SVG defs`)
+    //console.warn(`Notehead symbol ${symbolId} not found in SVG defs`)
     const symbol = doc.createElementNS('http://www.w3.org/2000/svg', 'symbol')
     symbol.setAttribute('id', symbolId)
     symbol.setAttribute('viewBox', '0 0 1000 1000')
@@ -211,7 +211,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
         const flagName = flagInfo.name
         const flagAvailable = defs.querySelector('#' + flagName)
         if (!flagAvailable) {
-          console.warn(`Flag symbol ${flagName} not found in SVG defs`)
+          // console.warn(`Flag symbol ${flagName} not found in SVG defs`)
           const symbol = doc.createElementNS('http://www.w3.org/2000/svg', 'symbol')
           symbol.setAttribute('id', flagName)
           symbol.setAttribute('viewBox', '0 0 1000 1000')
