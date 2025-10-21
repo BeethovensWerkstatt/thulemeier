@@ -342,9 +342,12 @@ export class MEIParser {
       element: beam
     }))
 
-    const repeats = [...system.querySelectorAll('line[func="repeat"]')].map(repeat => ({
+    const repeatTypes = ['repeat', 'mRpt', 'halfmRpt', 'beatRpt', 'bTrem', 'fTrem']
+    const repeats = [...system.querySelectorAll('line')].filter(line =>
+      repeatTypes.includes(line.getAttribute('func'))
+    ).map(repeat => ({
       id: repeat.getAttribute('xml:id'),
-      func: 'repeat',
+      func: repeat.getAttribute('func'),
       x: Math.round(parseFloat(repeat.getAttribute('x')) * 100) / 100,
       y: Math.round(parseFloat(repeat.getAttribute('y')) * 100) / 100,
       x2: Math.round(parseFloat(repeat.getAttribute('x2')) * 100) / 100,
