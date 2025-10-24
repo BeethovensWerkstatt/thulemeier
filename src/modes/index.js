@@ -2,12 +2,14 @@ import { FullPageRenderer } from './full-page.js'
 import { EmptyPageRenderer } from './empty-page.js'
 import { SingleDraftRenderer } from './single-draft.js'
 import { SingleDraftStandaloneRenderer } from './single-draft-standalone.js'
+import { SingleSystemRenderer } from './single-system.js'
 
 const renderers = {
   fullPage: new FullPageRenderer(),
   emptyPage: new EmptyPageRenderer(),
   singleDraft: new SingleDraftRenderer(),
-  singleDraftStandalone: new SingleDraftStandaloneRenderer()
+  singleDraftStandalone: new SingleDraftStandaloneRenderer(),
+  singleSystem: new SingleSystemRenderer()
 }
 
 /**
