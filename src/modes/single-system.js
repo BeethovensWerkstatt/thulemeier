@@ -6,12 +6,14 @@ import { renderDraft } from '../core/mei/draft.js'
 export class SingleSystemRenderer {
   /**
    * Calculate bounding box of SVG content
+   * Excludes rastrums from calculation - they may extend beyond the viewBox
    * @param {SVGElement} svg - SVG element
    * @returns {Object} Bounding box {x, y, width, height}
    */
   calculateBoundingBox (svg) {
-    // Get all rendered elements (skip defs, metadata)
-    const contentElements = svg.querySelectorAll('g[id^="draft"], g[class*="rastrum"]')
+    // Get all rendered elements (skip defs, metadata, and rastrums)
+    // Query for draft and system groups by class, not id
+    const contentElements = svg.querySelectorAll('g.draft, g.system, g.staff, g.note, g.rest')
     
     if (contentElements.length === 0) {
       // Fallback to full viewBox if no content found
@@ -110,7 +112,7 @@ export class SingleSystemRenderer {
    * @param {Object} context - Rendering context
    * @param {string} context.options.id - Draft ID (required)
    * @param {string} context.options.systemId - System ID (required)
-   * @param {number} [context.options.systemMargin=90] - Margin around system in SVG units (default 1cm at 90dpi)
+   * @param {number} [context.options.systemMargin=90] - Margin around system in SVG units (1mm = 90 units, so default 90 = 1mm)
    * @param {number} [context.options.systemScaleFactor=0.1] - Scale factor for width/height attributes (default 0.1)
    * @param {string} [outputPath] - Optional file path to save SVG (Node.js only)
    * @returns {Promise<SVGElement>} Rendered SVG element
@@ -176,7 +178,7 @@ export class SingleSystemRenderer {
     renderDraft(singleSystemDraft, svg, context)
 
     // Calculate bounding box and adjust viewBox with margin
-    const margin = context.options.systemMargin !== undefined ? context.options.systemMargin : 90 // Default 1cm at 90dpi
+    const margin = context.options.systemMargin !== undefined ? context.options.systemMargin : 90 // Default 90 units = 1mm
     const bbox = this.calculateBoundingBox(svg)
     
     // Create new viewBox with margin
