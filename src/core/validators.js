@@ -8,7 +8,7 @@ export function validateInput (input, options) {
     throw new Error('Input MEI document is required')
   }
 
-  const supportedModes = ['fullPage', 'emptyPage', 'singleDraft']
+  const supportedModes = ['fullPage', 'emptyPage', 'singleDraft', 'singleDraftStandalone']
   if (!supportedModes.includes(options.mode)) {
     throw new Error(`Unsupported rendering mode: ${options.mode}. Supported modes: ${supportedModes.join(', ')}`)
   }

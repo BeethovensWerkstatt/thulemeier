@@ -6,8 +6,10 @@ import { renderDraft } from '../core/mei/draft.js'
 export class FullPageRenderer {
   /**
    * Render full page mode
+   * Renders all rastrums (staff lines) and all drafts found in the MEI document
    * @param {Document} meiDocument - MEI document
    * @param {Object} context - Rendering context
+   * @param {string} [outputPath] - Optional file path to save SVG (Node.js only)
    * @returns {Promise<SVGElement>} Rendered SVG element
    */
   async render (meiDocument, context, outputPath = null) {

@@ -5,8 +5,10 @@ import { renderRastrums } from '../core/mei/rastrums.js'
 export class EmptyPageRenderer {
   /**
    * Render empty page mode
+   * Renders only the rastrums (empty staff lines) without any musical content
    * @param {Document} meiDocument - MEI document
    * @param {Object} context - Rendering context
+   * @param {string} [outputPath] - Optional file path to save SVG (Node.js only)
    * @returns {Promise<SVGElement>} Rendered SVG element
    */
   async render (meiDocument, context, outputPath = null) {

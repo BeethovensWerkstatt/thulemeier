@@ -15,7 +15,9 @@ const VERSION = '1.0.0'
  * Main rendering function for MEI documents
  * @param {Document|string} input - MEI document as DOM or XML string
  * @param {Object} options - Rendering options
- * @param {string} options.mode - Rendering mode ('fullPage')
+ * @param {string} options.mode - Rendering mode: 'fullPage', 'emptyPage', 'singleDraft', or 'singleDraftStandalone'
+ * @param {string} [options.id] - Draft ID (required for 'singleDraft' and 'singleDraftStandalone' modes)
+ * @param {string} [options.outputPath] - Optional file path to save SVG output (Node.js only)
  * @returns {Promise<SVGElement>} Rendered SVG element
  */
 export async function render (input, options = {}) {
