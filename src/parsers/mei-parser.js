@@ -288,7 +288,7 @@ export class MEIParser {
         unclear: meterSig.parentElement.tagName === 'unclear',
         element: meterSig
       }))
-      const artics = [...system.querySelectorAll('artic')].map(artic => {
+      const artics = [...system.querySelectorAll('staff[n="' + n + '"] layer > artic, staff[n="' + n + '"] layer > unclear > artic')].map(artic => {
         return {
           id: artic.getAttribute('xml:id'),
           x: Math.round(parseFloat(artic.getAttribute('x')) * 100) / 100,
