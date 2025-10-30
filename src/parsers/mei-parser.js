@@ -299,7 +299,7 @@ export class MEIParser {
           element: artic
         }
       })
-      const tupletNums = [...system.querySelectorAll('num[type="tuplet"]')].map(num => {
+      const tupletNums = [...system.querySelectorAll('staff[n="' + n + '"] layer > num[type="tuplet"], staff[n="' + n + '"] layer > unclear > num[type="tuplet"]')].map(num => {
         return {
           id: num.getAttribute('xml:id'),
           x: Math.round(parseFloat(num.getAttribute('x')) * 100) / 100,
