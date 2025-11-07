@@ -62,7 +62,7 @@ export function renderDir (dirObj, staffG, rastrum, context, svg) {
         tspan.textContent = seg.trim()
         if (count > 0) {
           tspan.setAttribute('x', x)
-          tspan.setAttribute('dy', lineHeight)
+          tspan.setAttribute('dy', lineheight)
         }
         textEl.appendChild(tspan)
         count++
