@@ -35,7 +35,7 @@ import { renderMetaMarkClarification, renderMetaMarkNavigation } from './metaMar
 export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg, context) {
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
-  console.log(`Rendering draft ${draftId} (${label}) with genDesc ${genDescId}`)
+  // console.log(`Rendering draft ${draftId} (${label}) with genDesc ${genDescId}`)
 
   /* if (context.dimensions.rotation) {
     svg.setAttribute('style', `transform: rotate(${context.dimensions.rotation}deg);`)
