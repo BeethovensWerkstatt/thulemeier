@@ -484,6 +484,7 @@ export class MEIParser {
         width: Math.round(parseFloat(octave.getAttribute('width')) * 100) / 100,
         dis: octave.getAttribute('dis'),
         disPlace: octave.getAttribute('dis.place'),
+        extender: octave.getAttribute('extender'),
         facs: octave.getAttribute('facs'),
         rastrum,
         unclear: octave.parentElement.tagName === 'unclear',
