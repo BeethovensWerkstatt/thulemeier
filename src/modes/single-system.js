@@ -14,7 +14,7 @@ export class SingleSystemRenderer {
     // Get all rendered elements (skip defs, metadata, and rastrums)
     // Query for draft and system groups by class, not id
     const contentElements = svg.querySelectorAll('g.draft, g.system, g.staff, g.note, g.rest')
-    
+
     if (contentElements.length === 0) {
       // Fallback to full viewBox if no content found
       const viewBox = svg.getAttribute('viewBox').split(' ').map(parseFloat)
