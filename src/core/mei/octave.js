@@ -27,22 +27,32 @@ export function renderOctave (octaveObj, systemG, rastrum, context, svg) {
   octaveG.setAttribute('data-id', octaveObj.id)
   octaveG.setAttribute('data-class', 'octave' + (octaveObj.unclear ? ' unclear' : ''))
 
-  // Create the use element for the octave symbol
-  const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')
-
-  // Determine which symbol to use based on 'dis' attribute
-  if (octaveObj.dis === '15') {
-    use.setAttribute('href', '#octave15-symbol')
+  if (octaveObj.content) {
+    // Create text element for custom content
+    const text = doc.createElementNS('http://www.w3.org/2000/svg', 'text')
+    text.setAttribute('x', x + 'px')
+    text.setAttribute('y', y + 'px')
+    text.setAttribute('font-size', '720px')
+    text.setAttribute('text-anchor', 'start')
+    text.textContent = octaveObj.content
   } else {
-    use.setAttribute('href', '#octave8-symbol')
+    // Create the use element for the octave symbol
+    const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')
+
+    // Determine which symbol to use based on 'dis' attribute
+    if (octaveObj.dis === '15') {
+      use.setAttribute('href', '#octave15-symbol')
+    } else {
+      use.setAttribute('href', '#octave8-symbol')
+    }
+
+    use.setAttribute('x', x + 'px')
+    use.setAttribute('y', y + 'px')
+    use.setAttribute('height', '720px')
+    use.setAttribute('width', '720px')
+
+    octaveG.appendChild(use)
   }
-
-  use.setAttribute('x', x + 'px')
-  use.setAttribute('y', y + 'px')
-  use.setAttribute('height', '720px')
-  use.setAttribute('width', '720px')
-
-  octaveG.appendChild(use)
 
   // Add extender line if specified and not explicitly disabled
   if (!octaveObj.extender || octaveObj.extender !== 'false') {

@@ -482,6 +482,7 @@ export class MEIParser {
         x: Math.round(parseFloat(octave.getAttribute('x')) * 100) / 100,
         y: Math.round(parseFloat(octave.getAttribute('y')) * 100) / 100,
         width: Math.round(parseFloat(octave.getAttribute('width')) * 100) / 100,
+        content: octave.textContent.trim() || '', // we need to be able to get mixed content
         dis: octave.getAttribute('dis'),
         disPlace: octave.getAttribute('dis.place'),
         extender: octave.getAttribute('extender'),
