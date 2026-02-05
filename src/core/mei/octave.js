@@ -7,6 +7,7 @@
  * @param {SVGElement} svg - the root SVG element
  */
 export function renderOctave (octaveObj, systemG, rastrum, context, svg) {
+  console.log('Rendering octave:', octaveObj)
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
