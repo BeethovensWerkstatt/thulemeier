@@ -36,6 +36,7 @@ export function renderOctave (octaveObj, systemG, rastrum, context, svg) {
     text.setAttribute('font-size', '720px')
     text.setAttribute('text-anchor', 'start')
     text.textContent = octaveObj.content
+    console.log('Using custom content for octave:', octaveObj.content)
   } else {
     // Create the use element for the octave symbol
     const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')
