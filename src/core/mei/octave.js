@@ -7,7 +7,7 @@
  * @param {SVGElement} svg - the root SVG element
  */
 export function renderOctave (octaveObj, systemG, rastrum, context, svg) {
-  console.log('Rendering octave:', octaveObj)
+  console.log(2534, 'Rendering octave:', octaveObj)
   const doc = svg.ownerDocument || (typeof document !== 'undefined' ? document : null)
   if (!doc) throw new Error('No SVG document context available')
 
@@ -36,7 +36,8 @@ export function renderOctave (octaveObj, systemG, rastrum, context, svg) {
     text.setAttribute('font-size', '720px')
     text.setAttribute('text-anchor', 'start')
     text.textContent = octaveObj.content
-    console.log('Using custom content for octave:', octaveObj.content)
+    console.log(2534, 'Using custom content for octave:', octaveObj.content)
+    octaveG.appendChild(text)
   } else {
     // Create the use element for the octave symbol
     const use = doc.createElementNS('http://www.w3.org/2000/svg', 'use')
