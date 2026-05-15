@@ -231,7 +231,7 @@ export class MEIParser {
         x: chord.getAttribute('x'),
         stemDir: chord.getAttribute('stem.dir') || null,
         stemLen: chord.hasAttribute('stem.dir') ? parseInt(chord.getAttribute('stem.len')) || 7 : null,
-        flags: parseInt(chord.getAttribute('dur')) > 4 ? (Math.log2(parseInt(chord.getAttribute('dur')) / 8) + 1) : null, // parseInt(chord.getAttribute('bw:flags')) || null,
+        flags: parseInt(chord.getAttribute('bw:stem.flags')) || null, // parseInt(chord.getAttribute('dur')) > 4 ? (Math.log2(parseInt(chord.getAttribute('dur')) / 8) + 1) : null, //
         notes: [...chord.querySelectorAll('note')].map(note => ({
           id: note.getAttribute('xml:id'),
           loc: parseInt(note.getAttribute('loc')),

@@ -193,6 +193,9 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
     // stemPath.setAttribute('stroke', 'black')
     stemG.appendChild(stemPath)
 
+    if (chord.flags) {
+      console.log(4567, 'Chord:', chord)
+    }
     // flags (same as note.js, using refactored logic)
     if (chord.stemDir && chord.flags && chord.flags > 0) {
       const flagG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
