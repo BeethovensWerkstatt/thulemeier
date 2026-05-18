@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../rng/thulemeier_test.odd.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="../rng/thulemeier_test.odd.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <mei xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.music-encoding.org/ns/mei" xmlns:bw="https://beethovens-werkstatt.de/ns/meiAdditions" meiversion="6.0+beethovensWerkstatt" xml:id="mb943310f-6bd0-4a38-82dc-e25c106f6bf8">
     <meiHead meiversion="6.0+beethovensWerkstatt" xml:id="m66990dc9-0c87-42fa-80ea-ee70f4732323">
         <fileDesc xml:id="f43cb37ae-eaa6-4bbf-a3d3-33b34738a35d">

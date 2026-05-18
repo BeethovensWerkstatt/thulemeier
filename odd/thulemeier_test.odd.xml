@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_odds.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?><?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_odds.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns:rng="http://relaxng.org/ns/structure/1.0"
+  xmlns:sch="http://purl.oclc.org/dsdl/schematron"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Thulemeier Test Data Model Customization</title>
+        <respStmt>
+          <resp>Authored by</resp>
+          <name xml:id="SS">Sophie Stremel</name>
+        </respStmt>
+      </titleStmt>
+      <publicationStmt>
+        <publisher/>
+        <availability>
+          <licence target="http://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution-ShareAlike 4.0 International </licence>
+        </availability>
+      </publicationStmt>
+      <sourceDesc>
+        <p/>
+      </sourceDesc>
+    </fileDesc>
+    <revisionDesc>
+      <change n="1" when="2026-05-18" who="#SS">
+        <desc>Creation of the initial ODD.</desc>
+      </change>
+    </revisionDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <schemaSpec ident="mei" ns="http://www.music-encoding.org/ns/mei" prefix="mei_"
+        start="mei" source="https://raw.githubusercontent.com/music-encoding/schema/refs/heads/main/dev/mei-all_compiled.odd">
+        <!-- Declare MEI and XLink namespaces for use in Schematron -->
+        <constraintSpec ident="set_ns" scheme="schematron" mode="add">
+          <constraint>
+            <sch:ns xmlns:sch="http://purl.oclc.org/dsdl/schematron" prefix="mei"
+              uri="http://www.music-encoding.org/ns/mei"/>
+            <sch:ns xmlns:sch="http://purl.oclc.org/dsdl/schematron" prefix="xlink"
+              uri   ="http://www.w3.org/1999/xlink"/>
+            <sch:ns xmlns:sch="http://purl.oclc.org/dsdl/schematron" prefix="svg"
+              uri="http://www.w3.org/2000/svg"/>
+            <sch:ns xmlns:sch="http://purl.oclc.org/dsdl/schematron" prefix="tei"
+              uri="http://www.tei-c.org/ns/1.0"/>
+            <sch:ns xmlns:sch="http://purl.oclc.org/dsdl/schematron" prefix="bw"
+              uri="https://www.beethovens-werkstatt.de/ns/meiAdditions"/>
+          </constraint>
+        </constraintSpec>
+
+        <!-- Include all modules -->
+        <moduleRef key="MEI"/>
+        <moduleRef key="MEI.analytical"/>
+        <moduleRef key="MEI.cmn"/>
+        <moduleRef key="MEI.cmnOrnaments"/>
+        <moduleRef key="MEI.corpus"/>
+        <moduleRef key="MEI.critapp"/>
+        <moduleRef key="MEI.drama"/>
+        <moduleRef key="MEI.edittrans"/>
+        <moduleRef key="MEI.externalsymbols"/>
+        <moduleRef key="MEI.facsimile"/>
+        <moduleRef key="MEI.figtable"/>
+        <moduleRef key="MEI.fingering"/>
+        <moduleRef key="MEI.frbr"/>
+        <moduleRef key="MEI.genetic"/>
+        <moduleRef key="MEI.gestural"/>
+        <moduleRef key="MEI.harmony"/>
+        <moduleRef key="MEI.header"/>
+        <moduleRef key="MEI.lyrics"/>
+        <moduleRef key="MEI.mensural"/>
+        <moduleRef key="MEI.midi"/>
+        <moduleRef key="MEI.msDesc" include="rastrum"/>
+        <moduleRef key="MEI.namesdates"/>
+        <moduleRef key="MEI.neumes"/>
+        <moduleRef key="MEI.performance"/>
+        <moduleRef key="MEI.ptrref"/>
+        <moduleRef key="MEI.shared"/>
+        <moduleRef key="MEI.stringtab"/>
+        <moduleRef key="MEI.text"/>
+        <moduleRef key="MEI.usersymbols"/>
+        <moduleRef key="MEI.visual"/>
+
+        <elementSpec ident="mdiv" module="MEI.shared" mode="change">
+          <content>
+            <rng:ref name="model.draftsLike"/>
+          </content>
+        </elementSpec>
+        
+        <classSpec ident="model.draftsLike" type="model" module="MEI.genetic" mode="add">
+          <desc xml:lang="en">Groups elements similar to drafts containers.</desc>
+        </classSpec>
+        
+        <classSpec ident="model.draftLike" type="model" module="MEI.genetic" mode="add">
+          <desc xml:lang="en">Groups elements similar to drafts.</desc>
+        </classSpec>
+        
+        <elementSpec ident="drafts" module="MEI.genetic" mode="add" prefix="bw_"
+          ns="https://beethovens-werkstatt.de/ns/meiAdditions">
+          <desc>Provides a container for drafts.</desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="att.declaring"/>
+            <memberOf key="model.draftsLike"/>
+          </classes>
+          <content>
+            <rng:oneOrMore>
+              <rng:ref name="model.draftLike"/>
+            </rng:oneOrMore>
+          </content>
+        </elementSpec>
+        
+        <elementSpec ident="draft" module="MEI.genetic" mode="add" prefix="bw_"
+          ns="https://beethovens-werkstatt.de/ns/meiAdditions">
+          <desc>A version of the musical content that is unfinished – a sketch, draft or
+            similar.</desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="att.declaring"/>
+            <memberOf key="att.trans"/>
+            <memberOf key="model.draftLike"/>
+          </classes>
+          <content>
+            <rng:group>
+              <rng:ref name="model.pbLike"/>
+              <rng:oneOrMore>
+                <rng:ref name="model.bwSystemLike"/>
+              </rng:oneOrMore>
+              <rng:zeroOrMore>
+                <rng:ref name="del"/>
+              </rng:zeroOrMore>
+            </rng:group>
+          </content>
+          <remarks>
+            <p>Drafts may have any kind of score setup – an incomplete particell with multiple
+              staves may very well be regarded as <gi scheme="MEI">draft</gi>. However, their
+              distinctive incompleteness is important: It is not possible to map their
+              content 1:1 to a later finished <gi scheme="MEI">score</gi> (or <gi
+                scheme="MEI">part</gi>). Therefore, they allow only selective mapping, which
+              can be done using <gi scheme="MEI">relation</gi>s with
+              <att>rel</att>="isReconfigurationOf" inside the <gi scheme="MEI">genDesc</gi>
+              element. </p>
+          </remarks>
+        </elementSpec>
+        
+        <elementSpec ident="rastrum" module="MEI.msDesc" mode="add">
+          <desc xml:lang="en">Describes a rastrum used to prepare a page with staff lines.</desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="model.rastrumLike"/>
+            <memberOf key="att.rastrum.log"/>
+            <memberOf key="att.rastrum.vis"/>
+            <memberOf key="att.rastrum.ges"/>
+            <memberOf key="att.rastrum.anl"/>
+          </classes>
+          <content>
+            <rng:empty/>
+          </content>
+          <constraintSpec ident="Check_rastrum" scheme="schematron">
+            <constraint>
+              <sch:rule context="mei:rastrum">
+                <sch:assert test="not(@systems = '1' and exists(@system.dist))">A rastrum with only one system must not specify a distance between multiple systems.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <remarks xml:lang="en">
+            <p>A rastrum is a traditional tool used to draw staff lines on paper. It may draw one or more systems at a time.
+              The rastrum element tries to reflect this. It is most useful when describing manuscripts, even when they use
+              industrially produced paper. One rastrum element is used per block of systems / staff lines that are produced 
+              simultaneously. The <att>systems</att> attribute indicates the number of systems produced by this rastrum, 
+              while <att>system.height</att> and <att>system.dist</att> describe the height of and distance between these
+              systems.</p>
+            <p>In oder to achieve compatibility with traditional printed source descriptions, it is highly recommended to 
+              provide all measurements in real-world units, like millimeters.</p>
+          </remarks>
+        </elementSpec>
+        
+        <!-- allow @facs references to SVG shapes -->
+        <classSpec ident="att.facsimile" module="MEI.facsimile" type="atts" mode="replace">
+          <desc>Attributes that associate a feature corresponding with all or part of an
+            image.</desc>
+          <attList org="group">
+            <attDef ident="facs" usage="opt">
+              <desc>Permits the current element to reference a facsimile surface or image
+                zone which corresponds to it.</desc>
+              <datatype maxOccurs="unbounded" minOccurs="1">
+                <rng:ref name="data.URI"/>
+              </datatype>
+              <constraintSpec ident="check_facsTarget" scheme="schematron" mode="replace">
+                <constraint>
+                  <sch:rule context="@facs">
+                    <sch:assert role="warning" test="not(normalize-space(.) eq '')">@facs
+                      attributes should have content.</sch:assert>
+                    <sch:assert role="warning" test="normalize-space(.) = .">@facs should
+                      use normalized space.</sch:assert>
+                    <sch:assert role="error"
+                      test="every $i in tokenize(., '\s+') satisfies starts-with($i, './svg/')"
+                      >In diplomatic transcripts, @facs must point to a separate SVG file
+                      (link starting with './svg/').</sch:assert>
+                  </sch:rule>
+                </constraint>
+              </constraintSpec>
+            </attDef>
+          </attList>
+        </classSpec>
+        
+        <classSpec type="atts" ident="att.linking" module="MEI.shared" mode="change">
+          <attList>
+            <attDef ident="corresp" usage="opt" mode="change">
+              <constraintSpec ident="check_correspTarget" scheme="schematron" mode="replace">
+                <constraint>
+                  <sch:rule context="@corresp">
+                    <sch:assert role="warning" test="not(normalize-space(.) eq '')">@corresp attribute should have content.</sch:assert>
+                    <sch:assert role="warning" test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id or matches($i, '^([a-z]+://|\.{1,2}/)')">Each value in @corresp should correspond to the @xml:id attribute of an element or be an external URL.</sch:assert>
+                  </sch:rule>
+                </constraint>
+              </constraintSpec>
+            </attDef>
+          </attList>
+        </classSpec>
+        
+        <classSpec type="atts" ident="att.dataPointing" module="MEI.shared" mode="change">
+          <attList>
+            <attDef ident="data" usage="opt" mode="change">
+              
+            </attDef>
+          </attList>
+        </classSpec>
+        
+        <classSpec type="atts" ident="att.metadataPointing" module="MEI.shared" mode="replace">
+          <attList>
+            <attDef ident="decls" usage="opt">
+              <desc xml:lang="en">Identifies one or more metadata elements (other than
+                classification terms) within the header, which are understood to apply to
+                the element bearing this attribute and its content.</desc>
+              <datatype maxOccurs="unbounded">
+                <rng:ref name="data.URI"/>
+              </datatype>
+              <constraintSpec ident="check_declsTarget" scheme="schematron" mode="replace">
+                <constraint>
+                  <sch:rule context="@decls">
+                    <sch:assert role="warning" test="not(normalize-space(.) eq '')">@decls
+                      attribute should have content.</sch:assert>
+                    <!--<sch:assert role="warning" test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[ancestor::mei:meiHead]/@xml:id">Each value in @decls should correspond to the @xml:id attribute of an element within the metadata header.</sch:assert>-->
+                    <sch:assert
+                      test="every $i in tokenize(., '\s+') satisfies not(substring($i,2)=//mei:term/@xml:id)"
+                      >No value in @decls should correspond to the @xml:id attribute of a
+                      classification term. Use @class for this purpose.</sch:assert>
+                  </sch:rule>
+                </constraint>
+              </constraintSpec>
+            </attDef>
+          </attList>
+        </classSpec>
+        
+        <elementSpec ident="dynam" module="MEI.shared" mode="change">
+          <classes>
+            <memberOf key="att.id"/>
+            <memberOf key="att.facsimile"/>
+            <memberOf key="att.width"/>
+            <memberOf key="att.xy"/>
+            <memberOf key="att.staffIdent"/>
+            <memberOf key="model.dtControlEvents"/>
+          </classes>
+          <constraintSpec ident="dynam_start-type_attributes_required" scheme="schematron"
+            mode="replace">
+            <constraint>
+              <!-- empty -->
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="dynam_end-type_attributes" scheme="schematron" mode="replace">
+            <constraint>
+              <!-- empty -->
+            </constraint>
+          </constraintSpec>
+        </elementSpec>
+        
+        <elementSpec ident="dir" module="MEI.shared" mode="change">
+          <classes>
+            <memberOf key="att.id"/>
+            <memberOf key="att.facsimile"/>
+            <memberOf key="att.staffIdent"/>
+            <memberOf key="att.width"/>
+            <memberOf key="att.xy"/>
+            <memberOf key="model.dtControlEvents"/>
+          </classes>
+          <constraintSpec ident="dir_start-type_attributes_required" scheme="schematron"
+            mode="replace">
+            <constraint>
+              <!-- empty -->
+            </constraint>
+          </constraintSpec>
+        </elementSpec>
+        
+        <elementSpec ident="tempo" module="MEI.shared" mode="change">
+          <classes>
+            <memberOf key="att.id"/>
+            <memberOf key="att.facsimile"/>
+            <memberOf key="att.staffIdent"/>
+            <memberOf key="att.width"/>
+            <memberOf key="att.xy"/>
+            <memberOf key="model.dtControlEvents"/>
+          </classes>
+          <constraintSpec ident="tempo_in_header_disallow_most_attrs" scheme="schematron"
+            mode="replace">
+            <constraint>
+              <!-- empty -->
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="tempo_start-type_attributes_required" scheme="schematron"
+            mode="replace">
+            <constraint>
+              <!-- empty -->
+            </constraint>
+          </constraintSpec>
+        </elementSpec>
+
+        <classSpec ident="att.meiVersion" module="MEI.shared" type="atts" mode="replace">
+          <desc xml:lang="en">Attributes that record the version of MEI in use.</desc>
+          <attList>
+            <attDef ident="meiversion" usage="opt">
+              <desc xml:lang="en">Specifies a generic MEI version label.</desc>
+              <valList type="closed">
+                <valItem ident="6.0+beethovensWerkstatt">
+                  <desc xml:lang="en">MEI 6.0 with customizations by Beethovens
+                    Werkstatt</desc>
+                </valItem>
+              </valList>
+            </attDef>
+          </attList>
+        </classSpec>
+
+      </schemaSpec>
+    </body>
+  </text>
+</TEI>
