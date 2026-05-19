@@ -2,7 +2,7 @@
 <?xml-model href="../rng/thulemeier_test.odd.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="../rng/thulemeier_test.odd.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <mei xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.music-encoding.org/ns/mei" xmlns:bw="https://beethovens-werkstatt.de/ns/meiAdditions" meiversion="6.0+beethovensWerkstatt" xml:id="mb943310f-6bd0-4a38-82dc-e25c106f6bf8">
-    <meiHead meiversion="6.0+beethovensWerkstatt" xml:id="m66990dc9-0c87-42fa-80ea-ee70f4732323">
+    <meiHead meiversion="6.0-dev+beethovensWerkstatt" xml:id="m66990dc9-0c87-42fa-80ea-ee70f4732323">
         <fileDesc xml:id="f43cb37ae-eaa6-4bbf-a3d3-33b34738a35d">
             <titleStmt xml:id="t56200ab1-d30a-4fc6-a265-317105e71498">
                 <title xml:id="td4999f5b-aaf3-4825-94b6-5f280945353b">

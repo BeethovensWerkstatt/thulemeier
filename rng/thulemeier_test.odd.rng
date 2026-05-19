@@ -5,7 +5,7 @@
          xmlns:xlink="http://www.w3.org/1999/xlink"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          ns="http://www.music-encoding.org/ns/mei"><!--
-Schema generated from ODD source 2026-05-18T12:27:03Z. . 
+Schema generated from ODD source 2026-05-19T08:51:42Z. . 
 TEI Edition: MEI 6.0-dev 
 TEI Edition Location: https://www.tei-c.org/Vault/P5// 
   
@@ -15627,7 +15627,7 @@ Suggested values include: 1] byte; 2] char; 3] cm; 4] deg; 5] in; 6] issue; 7] f
          <attribute name="meiversion">
             <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Specifies a generic MEI version label.</a:documentation>
             <choice>
-               <value>6.0+beethovensWerkstatt</value>
+               <value>6.0-dev+beethovensWerkstatt</value>
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">MEI 6.0 with customizations by Beethovens Werkstatt</a:documentation>
             </choice>
          </attribute>

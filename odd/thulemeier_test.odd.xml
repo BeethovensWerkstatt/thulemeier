@@ -23,6 +23,16 @@
         <p/>
       </sourceDesc>
     </fileDesc>
+    <encodingDesc>
+      <projectDesc>
+        <p>
+          This ODD customization represents an initial experimental proposal for the
+          modeling of Beethoven’s Werkstatt materials. It is intended as a starting
+          point for discussion and further development rather than a finalized
+          recommendation.
+        </p>
+      </projectDesc>
+    </encodingDesc>
     <revisionDesc>
       <change n="1" when="2026-05-18" who="#SS">
         <desc>Creation of the initial ODD.</desc>
@@ -321,7 +331,7 @@
             <attDef ident="meiversion" usage="opt">
               <desc xml:lang="en">Specifies a generic MEI version label.</desc>
               <valList type="closed">
-                <valItem ident="6.0+beethovensWerkstatt">
+                <valItem ident="6.0-dev+beethovensWerkstatt">
                   <desc xml:lang="en">MEI 6.0 with customizations by Beethovens
                     Werkstatt</desc>
                 </valItem>
