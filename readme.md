@@ -1,6 +1,6 @@
 ![Thulemeier](/assets/thulemeier-logo-240.png)
 
-Thulemeier is a facsimile rendering library for diplomatic transcriptions based on MEI, developed by the [_Beethovens Werkstatt_](https://beethovens-werkstatt.de) project.
+Thulemeier is a facsimile rendering library for diplomatic transcriptions based on [MEI](https://music-encoding.org), developed by the [_Beethovens Werkstatt_](https://beethovens-werkstatt.de) project.
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
