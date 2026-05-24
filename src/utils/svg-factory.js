@@ -59,6 +59,10 @@ export async function createSVGContainer (dimensions, options = {}) {
     .deletionBack {
       fill: #00000033;
     } */
+
+    .rastrum {
+      fill: none;
+    }
   `
   style.textContent = defaultCSS
   defs.appendChild(style)

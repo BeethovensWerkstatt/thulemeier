@@ -4,9 +4,13 @@
   "description": "A facsimile renderer for MEI data operating on level 5 visual data",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "thulemeier": "./cli.js"
+  },
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
+    "render": "node ./cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

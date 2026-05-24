@@ -1,8 +1,36 @@
-# Thulemeier
+![Thulemeier](/assets/thulemeier-logo.png)
 
-Thulemeier is a facsimile rendering library for diplomatic transcriptions based on MEI, developed by the _Beethovens Werkstatt_ project.
+Thulemeier is a facsimile rendering library for diplomatic transcriptions based on MEI, developed by the [_Beethovens Werkstatt_](https://beethovens-werkstatt.de) project.
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+## Command Line Usage
+
+Thulemeier now includes a minimal CLI wrapper for Node.js.
+
+```bash
+node ./cli.js <input.mei.xml> <output.svg> [options]
+```
+
+Example for full-page rendering:
+
+```bash
+node ./cli.js ./test/2025-09_thulemeier_test3.xml ./test/output-fullpage.svg --mode fullPage
+```
+
+Or via npm script:
+
+```bash
+npm run render -- ./test/2025-09_thulemeier_test3.xml ./test/output-fullpage.svg --mode fullPage
+```
+
+Optional flags:
+
+- `--mode <name>` (default: `fullPage`)
+- `--id <draftId>` (required for `singleDraft`, `singleDraftStandalone`, `singleSystem`)
+- `--systemId <systemId>` (required for `singleSystem`)
+- `--baseScaling <number>`
+- `--help`
 
 ## Rendering Modes
 

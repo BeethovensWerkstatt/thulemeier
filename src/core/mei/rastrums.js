@@ -36,7 +36,7 @@ export function renderRastrums (meiDocument, svg, context) {
     rect.setAttribute('y', y)
     rect.setAttribute('width', width)
     rect.setAttribute('height', height)
-    rect.setAttribute('fill', '#ff000033')
+    // rect.setAttribute('fill', '#ff000033')
     bboxG.appendChild(rect)
 
     g.appendChild(bboxG)
