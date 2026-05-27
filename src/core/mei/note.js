@@ -28,7 +28,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
   const symbolAvailable = defs.querySelector('#' + symbolId)
 
   if (!symbolAvailable) {
-    //console.warn(`Notehead symbol ${symbolId} not found in SVG defs`)
+    // console.warn(`Notehead symbol ${symbolId} not found in SVG defs`)
     const symbol = doc.createElementNS('http://www.w3.org/2000/svg', 'symbol')
     symbol.setAttribute('id', symbolId)
     symbol.setAttribute('viewBox', '0 0 1000 1000')
@@ -145,7 +145,7 @@ export function renderNote (note, staffG, rastrum, context, svg) {
   }
 
   // Render stem if needed
-  if (note.stemDir) {
+  if (note.stemDir && !note.stemHidden) {
     const stemG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
     stemG.setAttribute('class', 'stem')
     noteG.appendChild(stemG)
