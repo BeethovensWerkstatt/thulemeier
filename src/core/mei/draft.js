@@ -120,6 +120,12 @@ export function renderDraft ({ label, genDescId, draftId, genDesc, draft }, svg,
       renderBeam(beam, systemG, rastrum, context, svg)
     })
 
+    system.controlEvents.lines.forEach(line => {
+      console.log(9375, line)
+      const rastrum = context.rastrums.find(r => r.id === line.rastrum)
+      renderLine(line, systemG, rastrum, context, svg)
+    })
+
     system.controlEvents.repeats.forEach(repeat => {
       const rastrum = context.rastrums.find(r => r.id === repeat.rastrum)
       renderLine(repeat, systemG, rastrum, context, svg)

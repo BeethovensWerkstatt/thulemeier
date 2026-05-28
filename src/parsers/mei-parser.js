@@ -355,6 +355,22 @@ export class MEIParser {
       element: beam
     }))
 
+    const lineTypes = ['gliss']
+    const lines = [...system.querySelectorAll('line')].filter(line => {
+      return lineTypes.includes(line.getAttribute('func'))
+    }).map(line => ({
+      id: line.getAttribute('xml:id'),
+      func: line.getAttribute('func'),
+      x: Math.round(parseFloat(line.getAttribute('x')) * 100) / 100,
+      y: Math.round(parseFloat(line.getAttribute('y')) * 100) / 100,
+      x2: Math.round(parseFloat(line.getAttribute('x2')) * 100) / 100,
+      y2: Math.round(parseFloat(line.getAttribute('y2')) * 100) / 100,
+      facs: line.getAttribute('facs'),
+      rastrum: rastrums[parseInt(line.getAttribute('staff')) - 1],
+      unclear: line.parentElement.tagName === 'unclear',
+      element: line
+    }))
+
     const repeatTypes = ['repeat', 'mRpt', 'halfmRpt', 'beatRpt', 'bTrem', 'fTrem']
     const repeats = [...system.querySelectorAll('line')].filter(line =>
       repeatTypes.includes(line.getAttribute('func'))
@@ -636,7 +652,7 @@ export class MEIParser {
 
     // pedal
 
-    return { barLines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, fs, repeats, metaMarkClarifications, metaMarkNavigations }
+    return { barLines, lines, beams, dirs, tempos, dynams, curves, hairpins, trills, octaves, fermatas, pedals, words, fings, fs, repeats, metaMarkClarifications, metaMarkNavigations }
   }
 
   /**
