@@ -218,6 +218,8 @@ export class MEIParser {
         id: note.getAttribute('xml:id'),
         x: Math.round(parseFloat(note.getAttribute('x')) * 100) / 100,
         loc: parseInt(note.getAttribute('loc')),
+        pname: note.getAttribute('pname') || null,
+        oct: note.getAttribute('oct') ? parseInt(note.getAttribute('oct')) : null,
         stemLen: note.hasAttribute('stem.dir') ? parseInt(note.getAttribute('stem.len')) || 7 : null,
         stemHidden: note.getAttribute('stem.hide') === 'true',
         stemDir: note.getAttribute('stem.dir') || null,
@@ -229,7 +231,7 @@ export class MEIParser {
       }))
       const chords = [...system.querySelectorAll('staff[n="' + n + '"] layer > chord, staff[n="' + n + '"] layer > unclear > chord')].map(chord => ({
         id: chord.getAttribute('xml:id'),
-        x: chord.getAttribute('x'),
+        x: Math.round(parseFloat(chord.getAttribute('x')) * 100) / 100,
         stemDir: chord.getAttribute('stem.dir') || null,
         stemHidden: chord.getAttribute('stem.hide') === 'true',
         stemLen: chord.hasAttribute('stem.dir') ? parseInt(chord.getAttribute('stem.len')) || 7 : null,
@@ -237,6 +239,8 @@ export class MEIParser {
         notes: [...chord.querySelectorAll('note')].map(note => ({
           id: note.getAttribute('xml:id'),
           loc: parseInt(note.getAttribute('loc')),
+          pname: note.getAttribute('pname') || null,
+          oct: note.getAttribute('oct') ? parseInt(note.getAttribute('oct')) : null,
           headShape: note.getAttribute('head.shape') || 'quarter'
         })),
         facs: chord.getAttribute('facs'),
@@ -311,6 +315,69 @@ export class MEIParser {
           unclear: num.parentElement.tagName === 'unclear',
           element: num
         }
+      })
+
+      // Helper: convert pitch letter+octave to a diatonic index (C=0..B=6 per octave)
+      function letterIndex (pname) {
+        if (!pname) return null
+        const map = { c: 0, d: 1, e: 2, f: 3, g: 4, a: 5, b: 6 }
+        return map[pname.toLowerCase()] == null ? null : map[pname.toLowerCase()]
+      }
+
+      function diatonicIndex (pname, oct) {
+        const li = letterIndex(pname)
+        if (li == null || typeof oct !== 'number') return null
+        return oct * 7 + li
+      }
+
+      function clefRefIndex (shape) {
+        switch ((shape || 'G').toUpperCase()) {
+          case 'G':
+            return diatonicIndex('g', 4) // G4 on the clef line
+          case 'F':
+            return diatonicIndex('f', 3) // F3 on the clef line
+          case 'C':
+            return diatonicIndex('c', 4) // C4 (middle C) on the clef line
+          default:
+            return diatonicIndex('g', 4)
+        }
+      }
+
+      function computeLocFromPitch (pname, oct, clef) {
+        if (!pname || typeof oct !== 'number' || !clef) return null
+        const clefLine = parseInt(clef.line, 10) || 2
+        const clefLoc = (clefLine - 1) * 2
+        const target = diatonicIndex(pname, oct)
+        const ref = clefRefIndex(clef.shape)
+        if (target == null || ref == null) return null
+        return clefLoc + (target - ref)
+      }
+
+      // Normalize clef x positions for lookup
+      const clefsSorted = clefs.map(c => ({ x: Math.round(parseFloat(c.x || 0) * 100) / 100, shape: c.shape, line: c.line })).sort((a, b) => a.x - b.x)
+
+      // Fill missing note.loc from pname+oct using active clef at note.x
+      notes.forEach(note => {
+        if (Number.isNaN(note.loc) || note.loc == null) {
+          if (!note.pname || typeof note.oct !== 'number') return
+          const active = clefsSorted.slice().reverse().find(c => c.x <= (note.x || 0)) || clefsSorted[0]
+          if (!active) return
+          const computed = computeLocFromPitch(note.pname, note.oct, active)
+          if (computed != null) note.loc = computed
+        }
+      })
+
+      // Fill missing chord inner note locs using chord.x as position
+      chords.forEach(chord => {
+        const chordX = chord.x || 0
+        const active = clefsSorted.slice().reverse().find(c => c.x <= chordX) || clefsSorted[0]
+        chord.notes.forEach(n => {
+          if (Number.isNaN(n.loc) || n.loc == null) {
+            if (!n.pname || typeof n.oct !== 'number') return
+            const computed = computeLocFromPitch(n.pname, n.oct, active)
+            if (computed != null) n.loc = computed
+          }
+        })
       })
 
       staves.push({ n, rastrum, notes, chords, rests, accids, clefs, dots, meterSigs, artics, tupletNums })
