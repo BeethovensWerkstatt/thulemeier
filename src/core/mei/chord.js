@@ -165,8 +165,9 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
     }
   }
 
-  // Render stem if needed (same as note.js)
-  if (chord.stemDir) {
+  // Render stem if needed (same as note.js + avoid whole note stems ; o we need longa etc.?)
+  const headShapes = [...new Set(notes.map(n => n.headShape || 'quarter'))]
+  if (chord.stemDir && !chord.stemHidden && !headShapes.includes('whole')) {
     const stemG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
     stemG.setAttribute('class', 'stem')
     chordG.appendChild(stemG)
