@@ -115,9 +115,10 @@ export class MEIParser {
   /**
    * Extract rastrums from MEI document
    * @param {Document} meiDocument - MEI document
+   * @param {Object} options - Rendering options (e.g. baseScaling)
    * @returns {Array} Array of rastrum objects
    */
-  extractRastrums (meiDocument) {
+  extractRastrums (meiDocument, options = {}) {
     const rastrums = meiDocument.querySelectorAll('rastrum')
     return Array.from(rastrums).map(rastrum => {
       const mmX = parseFloat(rastrum.getAttribute('system.leftmar')) || 0
@@ -126,7 +127,7 @@ export class MEIParser {
       const mmH = parseFloat(rastrum.getAttribute('system.height')) || 0
       const rotate = parseFloat(rastrum.getAttribute('rotate')) || 0
 
-      const baseScaling = 90 // TODO: get from context options
+      const baseScaling = options.baseScaling || 90
       const svgX = Math.round(mmX * baseScaling * 100) / 100
       const svgY = Math.round(mmY * baseScaling * 100) / 100
       const svgW = Math.round(mmW * baseScaling * 100) / 100

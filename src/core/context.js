@@ -16,7 +16,7 @@ export function createRenderingContext (meiDocument, options) {
     // pages: parser.extractPages(meiDocument),
     // surfaces: parser.extractSurfaces(meiDocument),
     // zones: parser.extractZones(meiDocument),
-    rastrums: parser.extractRastrums(meiDocument),
+    rastrums: parser.extractRastrums(meiDocument, options),
     drafts: parser.extractDrafts(meiDocument),
     dimensions: calculateDimensions(meiDocument, options)
   }

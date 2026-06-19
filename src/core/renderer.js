@@ -7,7 +7,7 @@ export class Renderer {
   constructor (options = {}) {
     this.defaultOptions = {
       mode: 'fullPage',
-      baseScaling: 90, // same as Verovio defaults
+      baseScaling: 90, // same as Verovio defaults, matching a `unit` param with a default value of 9, and a general scaling factor of 10 in Verovio.
       ...options
     }
   }
