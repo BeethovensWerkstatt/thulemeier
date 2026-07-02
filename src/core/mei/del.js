@@ -26,7 +26,7 @@ export function renderDel (del, containerG, context, svg) {
     if (point.length > 1) {
       const x = parseFloat(point.substring(1).split(',')[0])
       const y = parseFloat(point.substring(1).split(',')[1])
-      const factor = 90 // 9px per vu, factor 10 as general factor of Verovio
+      const factor = context.options.baseScaling || 90
       out = (x * factor).toFixed(1) + ',' + (y * factor).toFixed(1)
     } else {
       out = ''
