@@ -215,6 +215,10 @@ export class MEIParser {
     system.querySelectorAll('staffDef').forEach(staffDef => {
       const n = staffDef.getAttribute('n')
       const rastrum = staffDef.getAttribute('decls').split('#')[1]
+      const getRastrumForStaff = staffN => {
+        const targetStaffDef = system.querySelector('staffDef[n="' + staffN + '"]')
+        return targetStaffDef ? targetStaffDef.getAttribute('decls').split('#')[1] : null
+      }
       const notes = [...system.querySelectorAll('staff[n="' + n + '"] layer > note, staff[n="' + n + '"] layer > unclear > note')].map(note => ({
         id: note.getAttribute('xml:id'),
         x: Math.round(parseFloat(note.getAttribute('x')) * 100) / 100,
@@ -231,15 +235,21 @@ export class MEIParser {
       const chords = [...system.querySelectorAll('staff[n="' + n + '"] layer > chord, staff[n="' + n + '"] layer > unclear > chord')].map(chord => ({
         id: chord.getAttribute('xml:id'),
         x: chord.getAttribute('x'),
+        staff: n,
         stemDir: chord.getAttribute('stem.dir') || null,
         stemHidden: chord.getAttribute('stem.hide') === 'true',
         stemLen: chord.hasAttribute('stem.dir') ? parseInt(chord.getAttribute('stem.len')) || 7 : null,
         flags: parseInt(chord.getAttribute('bw:stem.flags')) || null, // parseInt(chord.getAttribute('dur')) > 4 ? (Math.log2(parseInt(chord.getAttribute('dur')) / 8) + 1) : null, //
-        notes: [...chord.querySelectorAll('note')].map(note => ({
-          id: note.getAttribute('xml:id'),
-          loc: parseInt(note.getAttribute('loc')),
-          headShape: note.getAttribute('head.shape') || 'quarter'
-        })),
+        notes: [...chord.querySelectorAll('note')].map(note => {
+          const noteStaff = note.hasAttribute('staff') ? note.getAttribute('staff').replace(/\s+/g, ' ').trim().split(' ')[0] : n
+          return {
+            id: note.getAttribute('xml:id'),
+            loc: parseInt(note.getAttribute('loc')),
+            headShape: note.getAttribute('head.shape') || 'quarter',
+            staff: noteStaff,
+            rastrum: getRastrumForStaff(noteStaff)
+          }
+        }),
         facs: chord.getAttribute('facs'),
         unclear: chord.parentElement.tagName === 'unclear',
         element: chord

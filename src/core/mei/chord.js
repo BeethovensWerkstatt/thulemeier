@@ -23,34 +23,82 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
 
   const defs = svg.querySelector('defs')
 
-  // Chord noteheads: array of {loc, headShape, x}
+  // Chord noteheads: array of {loc, headShape, staff, rastrum}
   const notes = chord.notes || []
-  // Sort by loc ascending for consistent placement
-  notes.sort((a, b) => a.loc - b.loc)
+  const notesByStaff = new Map()
+  notes.forEach(note => {
+    const noteStaff = note.staff || chord.staff
+    if (!notesByStaff.has(noteStaff)) {
+      notesByStaff.set(noteStaff, [])
+    }
+    notesByStaff.get(noteStaff).push(note)
+  })
+  notesByStaff.forEach(staffNotes => staffNotes.sort((a, b) => a.loc - b.loc))
+
+  const getNoteRastrum = note => {
+    const noteRastrum = context.rastrums.find(candidate => candidate.id === note.rastrum)
+    return noteRastrum || rastrum
+  }
+
+  const toChordStaffCoordinates = (sourceRastrum, x, y) => {
+    if (sourceRastrum === rastrum) {
+      return { x, y }
+    }
+    const sourceRadians = sourceRastrum.rotate * Math.PI / 180
+    const chordRadians = rastrum.rotate * Math.PI / 180
+    const sourceCos = Math.cos(sourceRadians)
+    const sourceSin = Math.sin(sourceRadians)
+    const chordCos = Math.cos(chordRadians)
+    const chordSin = Math.sin(chordRadians)
+    const globalX = sourceRastrum.svgX + sourceCos * (x - sourceRastrum.svgX) - sourceSin * (y - sourceRastrum.svgY)
+    const globalY = sourceRastrum.svgY + sourceSin * (x - sourceRastrum.svgX) + sourceCos * (y - sourceRastrum.svgY)
+    const offsetX = globalX - rastrum.svgX
+    const offsetY = globalY - rastrum.svgY
+    return {
+      x: rastrum.svgX + chordCos * offsetX + chordSin * offsetY,
+      y: rastrum.svgY - chordSin * offsetX + chordCos * offsetY
+    }
+  }
+
+  const getCrossStaffPosition = (sourceRastrum, x, y) => {
+    if (sourceRastrum === rastrum) {
+      return { x, y, sourceX: x }
+    }
+    const sourceOrigin = toChordStaffCoordinates(sourceRastrum, 0, 0)
+    const rotationDifference = (sourceRastrum.rotate - rastrum.rotate) * Math.PI / 180
+    const sourceX = (x - sourceOrigin.x + Math.sin(rotationDifference) * y) / Math.cos(rotationDifference)
+    const position = toChordStaffCoordinates(sourceRastrum, sourceX, y)
+    return { x, y: position.y, sourceX }
+  }
 
   // Placement logic: per-note side decision
   // For stemDir up: start with lowest loc, for down: start with highest loc
   // left for up, right for down
-  const sideDecisions = [] // 'default' or 'other' per note
-  const sortedNotes = [...notes]
-  if (chord.stemDir === 'up') {
-    sortedNotes.sort((a, b) => a.loc - b.loc)
-  } else {
-    sortedNotes.sort((a, b) => b.loc - a.loc)
-  }
-  let lastSide = 'default'
-  sideDecisions[0] = 'default'
-  for (let i = 1; i < sortedNotes.length; i++) {
-    const prev = sortedNotes[i - 1]
-    const curr = sortedNotes[i]
-    if (Math.abs(curr.loc - prev.loc) === 1 && lastSide === 'default') {
-      sideDecisions[i] = 'other'
-      lastSide = 'other'
-    } else {
-      sideDecisions[i] = 'default'
-      lastSide = 'default'
+  const sideDecisions = new Map()
+  notesByStaff.forEach(staffNotes => {
+    const orderedNotes = [...staffNotes]
+    if (chord.stemDir === 'down') {
+      orderedNotes.reverse()
     }
-  }
+    let lastSide = 'default'
+    orderedNotes.forEach((note, index) => {
+      const previousNote = orderedNotes[index - 1]
+      const side = index > 0 && Math.abs(note.loc - previousNote.loc) === 1 && lastSide === 'default' ? 'other' : 'default'
+      sideDecisions.set(note, side)
+      lastSide = side
+    })
+  })
+
+  const sortedNotes = [...notes].sort((a, b) => {
+    const aStaff = a.staff || chord.staff
+    const bStaff = b.staff || chord.staff
+    if (aStaff !== bStaff) {
+      if (aStaff === chord.staff) return -1
+      if (bStaff === chord.staff) return 1
+      return aStaff.localeCompare(bStaff, undefined, { numeric: true })
+    }
+    return chord.stemDir === 'down' ? b.loc - a.loc : a.loc - b.loc
+  })
 
   // Create the chord group
   const chordG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
@@ -58,8 +106,10 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
   chordG.setAttribute('data-id', chord.id)
   if (chord.stemDir) chordG.setAttribute('data-stem.dir', chord.stemDir)
 
+  const notePositions = new Map()
+
   // Render noteheads with per-note side decision
-  sortedNotes.forEach((note, idx) => {
+  sortedNotes.forEach(note => {
     const noteHead = note.headShape || 'quarter'
     const symbolId = 'sym_notehead_' + noteHead
     const symbolAvailable = defs.querySelector('#' + symbolId)
@@ -96,11 +146,12 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
     use.setAttribute('height', chordHeight + 'px')
     use.setAttribute('width', chordWidth + 'px')
     // Placement: stemDir up = left, down = right, alternate if needed
+    const noteRastrum = getNoteRastrum(note)
     const xBase = rastrumX + (chord.x * context.options.baseScaling || 0)
     const xOff = ledgerLineLength - 2 * ledgerLineOffset
-    const y = loc0Y - (note.loc * vuStepSize)
+    const y = noteRastrum.loc0Y - (note.loc * noteRastrum.vuStepSize)
     let x
-    const side = sideDecisions[idx]
+    const side = sideDecisions.get(note)
     if (chord.stemDir === 'up') {
       x = xBase + (side === 'default' ? 0 : xOff)
     } else if (chord.stemDir === 'down') {
@@ -108,15 +159,19 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
     } else {
       x = xBase
     }
-    use.setAttribute('x', x)
-    use.setAttribute('y', y)
+    const position = getCrossStaffPosition(noteRastrum, x, y)
+    notePositions.set(note, position)
+    use.setAttribute('x', position.x)
+    use.setAttribute('y', position.y)
     headG.appendChild(use)
   })
 
-  // Ledger lines: only once per chord
-  if (notes.length > 0) {
+  // Ledger lines are staff-specific for cross-staff chords.
+  notesByStaff.forEach(staffNotes => {
+    const staffRastrum = getNoteRastrum(staffNotes[0])
+    const crossStaff = staffRastrum !== rastrum
     // Below: for lowest loc
-    const minLoc = Math.min(...notes.map(n => n.loc))
+    const minLoc = Math.min(...staffNotes.map(note => note.loc))
     if (minLoc < 0) {
       const ledgerG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
       ledgerG.setAttribute('class', 'ledgerLines below')
@@ -131,16 +186,18 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
       for (let line = minLoc; line < 0; line++) {
         if (line % 2 !== 0) continue
         const i = line - minLoc
-        const lineY = Math.round((loc0Y - (minLoc * vuStepSize) - (i * vuStepSize)) * 100) / 100
+        const lineY = Math.round((staffRastrum.loc0Y - (minLoc * staffRastrum.vuStepSize) - (i * staffRastrum.vuStepSize)) * 100) / 100
+        const start = crossStaff ? getCrossStaffPosition(staffRastrum, x1, lineY) : { x: x1, y: lineY }
+        const end = crossStaff ? getCrossStaffPosition(staffRastrum, x2, lineY) : { x: x2, y: lineY }
         const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
-        path.setAttribute('d', `M${x1} ${lineY} L${x2} ${lineY}`)
+        path.setAttribute('d', `M${start.x} ${start.y} L${end.x} ${end.y}`)
         path.setAttribute('stroke-width', ledgerLineWidth)
         // path.setAttribute('stroke', 'black')
         ledgerG.appendChild(path)
       }
     }
     // Above: for highest loc
-    const maxLoc = Math.max(...notes.map(n => n.loc))
+    const maxLoc = Math.max(...staffNotes.map(note => note.loc))
     if (maxLoc > 8) {
       const ledgerG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
       ledgerG.setAttribute('class', 'ledgerLines above')
@@ -155,38 +212,38 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
       for (let line = 9; line <= maxLoc; line++) {
         if (line % 2 !== 0) continue
         const i = line - maxLoc
-        const lineY = Math.round((loc0Y - (maxLoc * vuStepSize) - (i * vuStepSize)) * 100) / 100
+        const lineY = Math.round((staffRastrum.loc0Y - (maxLoc * staffRastrum.vuStepSize) - (i * staffRastrum.vuStepSize)) * 100) / 100
+        const start = crossStaff ? getCrossStaffPosition(staffRastrum, x1, lineY) : { x: x1, y: lineY }
+        const end = crossStaff ? getCrossStaffPosition(staffRastrum, x2, lineY) : { x: x2, y: lineY }
         const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
-        path.setAttribute('d', `M${x1} ${lineY} L${x2} ${lineY}`)
+        path.setAttribute('d', `M${start.x} ${start.y} L${end.x} ${end.y}`)
         path.setAttribute('stroke-width', ledgerLineWidth)
         // path.setAttribute('stroke', 'black')
         ledgerG.appendChild(path)
       }
     }
-  }
+  })
 
   // Render stem if needed (same as note.js + avoid whole note stems ; o we need longa etc.?)
-  const headShapes = [...new Set(notes.map(n => n.headShape || 'quarter'))]
-  if (chord.stemDir && !chord.stemHidden && !headShapes.includes('whole')) {
+  const headShapes = [...new Set(notes.map(note => note.headShape || 'quarter'))]
+  if (notes.length > 0 && chord.stemDir && !chord.stemHidden && !headShapes.includes('whole')) {
     const stemG = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
     stemG.setAttribute('class', 'stem')
     chordG.appendChild(stemG)
     const stemLen = chord.stemLen || 5
-    const chordLen = Math.max(...notes.map(n => n.loc)) - Math.min(...notes.map(n => n.loc)) + 1
-    const stemHeight = (stemLen + chordLen) * vuStepSize
     let stemX, stemY1, stemY2
-    // Place stem at main notehead (lowest for up, highest for down)
-    const mainNote = chord.stemDir === 'up' ? notes[0] : notes[notes.length - 1]
-    const mainY = loc0Y - (mainNote.loc * vuStepSize)
+    const noteYs = notes.map(note => notePositions.get(note).y)
+    const topY = Math.min(...noteYs)
+    const bottomY = Math.max(...noteYs)
     const mainX = rastrumX + (chord.x * context.options.baseScaling || 0)
     if (chord.stemDir === 'up') {
       stemX = mainX + (ledgerLineLength - 2 * ledgerLineOffset)
-      stemY1 = mainY - stemHeight
-      stemY2 = mainY
+      stemY1 = topY - (stemLen + 1) * vuStepSize
+      stemY2 = bottomY
     } else {
       stemX = mainX
-      stemY1 = mainY
-      stemY2 = mainY + stemHeight
+      stemY1 = topY
+      stemY2 = bottomY + (stemLen + 1) * vuStepSize
     }
     const stemPath = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
     stemPath.setAttribute('d', `M${stemX} ${stemY1} L${stemX} ${stemY2}`)
