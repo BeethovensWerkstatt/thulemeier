@@ -18,8 +18,6 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
   if (!doc) throw new Error('No SVG document context available')
 
   const rastrumX = rastrum.svgX
-  const vuStepSize = rastrum.vuStepSize
-  const loc0Y = rastrum.loc0Y
 
   const defs = svg.querySelector('defs')
 
@@ -238,12 +236,12 @@ export function renderChord (chord, staffG, rastrum, context, svg) {
     const mainX = rastrumX + (chord.x * context.options.baseScaling || 0)
     if (chord.stemDir === 'up') {
       stemX = mainX + (ledgerLineLength - 2 * ledgerLineOffset)
-      stemY1 = topY - (stemLen + 1) * vuStepSize
+      stemY1 = topY - (stemLen + 1) * rastrum.vuStepSize
       stemY2 = bottomY
     } else {
       stemX = mainX
       stemY1 = topY
-      stemY2 = bottomY + (stemLen + 1) * vuStepSize
+      stemY2 = bottomY + (stemLen + 1) * rastrum.vuStepSize
     }
     const stemPath = doc.createElementNS('http://www.w3.org/2000/svg', 'path')
     stemPath.setAttribute('d', `M${stemX} ${stemY1} L${stemX} ${stemY2}`)
